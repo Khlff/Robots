@@ -1,20 +1,19 @@
 package gui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.Locale;
+import log.Logger;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.util.Locale;
 
-import log.Logger;
+import static gui.ConstantsGUI.*;
 
 
 public class MainApplicationFrame extends JFrame {
     private final JDesktopPane desktopPane = new JDesktopPane();
 
     public MainApplicationFrame() {
-        //Make the big window be indented 50 pixels from each edge
-        //of the screen.
         int inset = 50;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset,
@@ -24,14 +23,16 @@ public class MainApplicationFrame extends JFrame {
         setContentPane(desktopPane);
 
         JFileChooser fc = new JFileChooser();
-        fc.setLocale(new Locale("ru","RU"));
+        fc.setLocale(new Locale("ru", "RU"));
         fc.updateUI();
 
         LogWindow logWindow = createLogWindow();
-        addWindow(logWindow);
 
         GameWindow gameWindow = new GameWindow();
-        gameWindow.setSize(400, 400);
+        gameWindow.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
+        gameWindow.setLocation(screenSize.width / 4, screenSize.height / 10);
+
+        addWindow(logWindow);
         addWindow(gameWindow);
 
         setJMenuBar(generateMenuBar());
@@ -40,8 +41,8 @@ public class MainApplicationFrame extends JFrame {
 
     protected LogWindow createLogWindow() {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
-        logWindow.setLocation(10, 10);
-        logWindow.setSize(300, 800);
+        logWindow.setLocation(LOG_WINDOW_LOC_X, LOG_WINDOW_LOC_Y);
+        logWindow.setSize(LOG_WINDOW_WIDTH, LOG_WINDOW_HEIGHT);
         setMinimumSize(logWindow.getSize());
         logWindow.pack();
         Logger.debug("Протокол работает");
@@ -102,29 +103,35 @@ public class MainApplicationFrame extends JFrame {
         return menuBar;
     }
 
-    protected void exit(JMenuItem item) {
+    /**
+     * Метод выхода из программы.
+     * Сначала закрывает все фреймы, затем происходит System.exit(0)
+     *
+     * @param item JMenu
+     */
+    protected void exit(JMenu item) {
+        JPanel exitPanel = new JPanel();
+        exitPanel.setLayout(null);
+        JLabel exitQuestion = new JLabel("Ты уверен что хочешь выйти?");
 
-        JPanel panel = new JPanel();
-        panel.setSize(new Dimension(250, 100));
-        panel.setLayout(null);
-        JLabel label2 = new JLabel("Ты уверен что хочешь выйти?");
-        label2.setVerticalAlignment(SwingConstants.TOP);
-        label2.setHorizontalAlignment(SwingConstants.CENTER);
-        label2.setBounds(20, 80, 200, 20);
-        panel.add(label2);
-        UIManager.put("OptionPane.minimumSize", new Dimension(400, 200));
-        int res = JOptionPane.showConfirmDialog(null, panel, "File",
+        exitQuestion.setVerticalAlignment(SwingConstants.TOP);
+        exitQuestion.setHorizontalAlignment(SwingConstants.CENTER);
+        exitQuestion.setBounds(EXIT_QUESTION_BOUND_X, EXIT_QUESTION_BOUND_Y, EXIT_QUESTION_WIDTH, EXIT_QUESTION_HEIGHT);
+        exitPanel.add(exitQuestion);
+
+        UIManager.put("OptionPane.minimumSize", new Dimension(OPTION_PAIN_MINIMUM_SIZE_WIDTH, OPTION_PAIN_MINIMUM_SIZE_HEIGHT));
+
+        int res = JOptionPane.showConfirmDialog(null, exitPanel, "Are you really want to exit?",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
 
         if (res == 0) {
-            //Закратие всех фреймов
             Container frame = item.getParent();
             do
                 frame = frame.getParent();
             while (!(frame instanceof JFrame));
             ((JFrame) frame).dispose();
-            // Завершение рантайма
+
             System.exit(0);
         }
     }
@@ -137,7 +144,7 @@ public class MainApplicationFrame extends JFrame {
 
         } catch (ClassNotFoundException | InstantiationException
                  | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            // just ignore
+            System.out.println(e.getMessage());
         }
     }
 }

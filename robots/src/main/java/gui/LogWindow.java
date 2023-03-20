@@ -11,21 +11,23 @@ import log.LogChangeListener;
 import log.LogEntry;
 import log.LogWindowSource;
 
+import static gui.ConstantsGUI.*;
+
 public class LogWindow extends JInternalFrame implements LogChangeListener
 {
-    private LogWindowSource m_logSource;
-    private TextArea m_logContent;
+    private final LogWindowSource logWindow;
+    private final TextArea logText;
 
     public LogWindow(LogWindowSource logSource) 
     {
         super("Протокол работы", true, true, true, true);
-        m_logSource = logSource;
-        m_logSource.registerListener(this);
-        m_logContent = new TextArea("");
-        m_logContent.setSize(200, 500);
+        logWindow = logSource;
+        logWindow.registerListener(this);
+        logText = new TextArea("");
+        logText.setSize(LOG_TEXT_WIDTH, LOG_TEXT_HEIGHT);
         
         JPanel panel = new JPanel(new BorderLayout());
-        panel.add(m_logContent, BorderLayout.CENTER);
+        panel.add(logText, BorderLayout.CENTER);
         getContentPane().add(panel);
         pack();
         updateLogContent();
@@ -34,12 +36,12 @@ public class LogWindow extends JInternalFrame implements LogChangeListener
     private void updateLogContent()
     {
         StringBuilder content = new StringBuilder();
-        for (LogEntry entry : m_logSource.all())
+        for (LogEntry entry : logWindow.all())
         {
             content.append(entry.getMessage()).append("\n");
         }
-        m_logContent.setText(content.toString());
-        m_logContent.invalidate();
+        logText.setText(content.toString());
+        logText.invalidate();
     }
     
     @Override
