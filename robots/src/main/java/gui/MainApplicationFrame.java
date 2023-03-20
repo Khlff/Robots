@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Locale;
 
 import javax.swing.*;
 
@@ -21,7 +22,10 @@ public class MainApplicationFrame extends JFrame {
                 screenSize.height - inset * 2);
 
         setContentPane(desktopPane);
-//        setLocale(new Locale("RUS")); не работает
+
+        JFileChooser fc = new JFileChooser();
+        fc.setLocale(new Locale("ru","RU"));
+        fc.updateUI();
 
         LogWindow logWindow = createLogWindow();
         addWindow(logWindow);
