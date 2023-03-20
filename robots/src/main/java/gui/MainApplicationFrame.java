@@ -1,11 +1,7 @@
 package gui;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.util.Locale;
+import java.awt.*;
+import java.awt.event.*;
 
 import javax.swing.*;
 
@@ -55,7 +51,6 @@ public class MainApplicationFrame extends JFrame {
 
     private JMenuBar generateMenuBar() {
         JMenuBar menuBar = new JMenuBar();
-
         JMenu lookAndFeelMenu = new JMenu("Режим отображения");
         lookAndFeelMenu.setMnemonic(KeyEvent.VK_V);
         lookAndFeelMenu.getAccessibleContext().setAccessibleDescription(
@@ -86,9 +81,7 @@ public class MainApplicationFrame extends JFrame {
 
         {
             JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
-            addLogMessageItem.addActionListener((event) -> {
-                Logger.debug("Новая строка");
-            });
+            addLogMessageItem.addActionListener((event) -> Logger.debug("Новая строка"));
             testMenu.add(addLogMessageItem);
         }
 
@@ -96,15 +89,40 @@ public class MainApplicationFrame extends JFrame {
         exitMenu.setMnemonic(KeyEvent.VK_E);
         exitMenu.getAccessibleContext().setAccessibleDescription(
                 "Выйти из программы");
-        exitMenu.addActionListener((event) -> {
-            System.exit(0);
-        });
+        exitMenu.addActionListener((event) -> exit(lookAndFeelMenu));
 
 
         menuBar.add(lookAndFeelMenu);
         menuBar.add(testMenu);
         menuBar.add(exitMenu);
         return menuBar;
+    }
+
+    protected void exit(JMenuItem item) {
+
+        JPanel panel = new JPanel();
+        panel.setSize(new Dimension(250, 100));
+        panel.setLayout(null);
+        JLabel label2 = new JLabel("Ты уверен что хочешь выйти?");
+        label2.setVerticalAlignment(SwingConstants.TOP);
+        label2.setHorizontalAlignment(SwingConstants.CENTER);
+        label2.setBounds(20, 80, 200, 20);
+        panel.add(label2);
+        UIManager.put("OptionPane.minimumSize", new Dimension(400, 200));
+        int res = JOptionPane.showConfirmDialog(null, panel, "File",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+
+        if (res == 0) {
+            //Закратие всех фреймов
+            Container frame = item.getParent();
+            do
+                frame = frame.getParent();
+            while (!(frame instanceof JFrame));
+            ((JFrame) frame).dispose();
+            // Завершение рантайма
+            System.exit(0);
+        }
     }
 
     private void setLookAndFeel(String className) {
