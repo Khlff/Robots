@@ -27,13 +27,19 @@ public class MainApplicationFrame extends JFrame {
         fc.updateUI();
 
         LogWindow logWindow = createLogWindow();
-
-        GameWindow gameWindow = new GameWindow();
+        Model model = new Model();
+        GameWindow gameWindow = new GameWindow(model);
         gameWindow.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
         gameWindow.setLocation(screenSize.width / 4, screenSize.height / 10);
 
-        addWindow(logWindow);
+        CoordinatesWindow coordinatesWindow = new CoordinatesWindow(model);
+
+        coordinatesWindow.setSize(COORDINATES_WIDTH, COORDINATES_HEIGHT);
+        coordinatesWindow.setLocation(screenSize.width / 2, screenSize.height / 100);
+
+        addWindow(coordinatesWindow);
         addWindow(gameWindow);
+        addWindow(logWindow);
 
         setJMenuBar(generateMenuBar());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
