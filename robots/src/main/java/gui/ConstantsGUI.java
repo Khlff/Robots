@@ -19,4 +19,7 @@ public class ConstantsGUI {
 
     public static final int LOG_TEXT_WIDTH = 200;
     public static final int LOG_TEXT_HEIGHT = 500;
+
+    public static final int COORDINATES_WIDTH = 150;
+    public static final int COORDINATES_HEIGHT = 50;
 }

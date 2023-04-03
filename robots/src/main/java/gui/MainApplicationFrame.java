@@ -34,7 +34,7 @@ public class MainApplicationFrame extends JFrame {
 
         CoordinatesWindow coordinatesWindow = new CoordinatesWindow(model);
 
-        coordinatesWindow.setSize(200, 150);
+        coordinatesWindow.setSize(COORDINATES_WIDTH, COORDINATES_HEIGHT);
         coordinatesWindow.setLocation(screenSize.width / 2, screenSize.height / 100);
 
         addWindow(coordinatesWindow);

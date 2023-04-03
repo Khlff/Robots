@@ -7,7 +7,7 @@ public class CoordinatesWindow extends JInternalFrame{
     private Model model;
     public CoordinatesWindow(Model model)
     {
-        super("Координаты", true, true, true, true);
+        super("Координаты", false, true, false, true);
         this.model = model;
         CoordinatesPanel coordinatesPanel = new CoordinatesPanel(model);
         JPanel panel = new JPanel(new BorderLayout());
