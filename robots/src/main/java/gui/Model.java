@@ -1,6 +1,10 @@
 package gui;
 
+import javax.swing.*;
 import javax.swing.text.View;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -17,7 +21,7 @@ public class Model {
     private static final double maxVelocity = 0.1;
     private static final double maxAngularVelocity = 0.001;
 
-    private ArrayList<ViewRobot> observers;
+    private ArrayList<Panel> observers;
 
     public int getM_targetPositionX() {
         return round(m_targetPositionX);
@@ -43,8 +47,26 @@ public class Model {
         observers = new ArrayList<>();
     }
 
-    public void addObserver(ViewRobot viewRobot) {
-        observers.add(viewRobot);
+    public void addMouseListener(JPanel panel){
+        panel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                Point target = e.getPoint();
+                setTargetPosition(target);
+
+            }
+        });
+    }
+
+    public void addObserver(Panel panel) {
+        observers.add(panel);
+    }
+
+    protected void setTargetPosition(Point p)
+    {
+        m_targetPositionX = p.x;
+        m_targetPositionY = p.y;
     }
 
     private static double distance(double x1, double y1, double x2, double y2) {
@@ -99,22 +121,17 @@ public class Model {
         m_robotPositionY = newY;
         double newDirection = asNormalizedRadians(m_robotDirection + angularVelocity * duration);
         m_robotDirection = newDirection;
-        updateCoordinates(m_robotPositionX, m_robotPositionY, m_robotDirection);
+        updateCoordinates();
     }
 
-    public void addMouseClickListener() {
+    public void updateCoordinates() {
+        for (Panel observers : observers) {
 
-    }
-
-    public void updateCoordinates(double m_robotPositionX, double m_robotPositionY,
-                                  double m_robotDirection) {
-        for (ViewRobot observers : observers) {
-
-            observers.update(m_robotPositionX, m_robotPositionY, m_robotDirection);
+            observers.update();
         }
     }
 
-    protected void onModelUpdateEvent() {
+    public void onModelUpdateEvent() {
         double distance = distance(m_targetPositionX, m_targetPositionY,
                 m_robotPositionX, m_robotPositionY);
         if (distance < 0.5) {

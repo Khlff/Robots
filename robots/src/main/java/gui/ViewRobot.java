@@ -11,7 +11,6 @@ import java.util.TimerTask;
 
 public class ViewRobot extends JInternalFrame implements Panel {
     JPanel gamePanel = new JPanel(new BorderLayout());
-    JPanel coordinates = new JPanel(new BorderLayout());
     Model model;
 
     private static java.util.Timer initTimer() {
@@ -19,7 +18,12 @@ public class ViewRobot extends JInternalFrame implements Panel {
     }
 
 
-    ViewRobot() {
+    ViewRobot(Model model) {
+        super("Игровое поле", true, true, true, true);
+
+
+        this.model = model;
+        model.addMouseListener(gamePanel);
         Timer m_timer = initTimer();
         m_timer.schedule(new TimerTask() {
             @Override
@@ -27,28 +31,34 @@ public class ViewRobot extends JInternalFrame implements Panel {
                 onRedrawEvent();
             }
         }, 0, 50);
-        m_timer.schedule(new TimerTask() {
+       m_timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                onModelUpdateEvent();//Придумать что-то
+                model.onModelUpdateEvent();
             }
         }, 0, 10);
-        gamePanel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Point target = e.getPoint();
-                System.out.println(target);
-            }
-        });
-        model.addObserver(this);
 
+        model.addObserver(this);
+        gamePanel.setDoubleBuffered(true);
         getContentPane().add(gamePanel);
         pack();
     }
 
     @Override
-    public void update(double xCoordinate, double yCoordinate, double direction) {
-
+    public void update() {
+        repaint();
+    }
+    private int round(double value)
+    {
+        return (int)(value + 0.5);
+    }
+    @Override
+    public void paint(Graphics g)
+    {
+        super.paint(g);
+        Graphics2D g2d = (Graphics2D)g;
+        drawRobot(g2d, round(model.getM_robotPositionX()), round(model.getM_robotPositionY()), model.getM_robotDirection());
+        drawTarget(g2d, model.getM_targetPositionX(), model.getM_targetPositionY());
     }
 
     protected void onRedrawEvent() {

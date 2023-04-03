@@ -32,6 +32,12 @@ public class MainApplicationFrame extends JFrame {
         gameWindow.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
         gameWindow.setLocation(screenSize.width / 4, screenSize.height / 10);
 
+        Model model = new Model();
+        ViewRobot viewRobot = new ViewRobot(model);
+        viewRobot.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
+        viewRobot.setLocation(screenSize.width / 4, screenSize.height / 10);
+
+        //addWindow(viewRobot);
         addWindow(logWindow);
         addWindow(gameWindow);
 
