@@ -27,19 +27,19 @@ public class MainApplicationFrame extends JFrame {
         fc.updateUI();
 
         LogWindow logWindow = createLogWindow();
-
-        GameWindow gameWindow = new GameWindow();
+        Model model = new Model();
+        GameWindow gameWindow = new GameWindow(model);
         gameWindow.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
         gameWindow.setLocation(screenSize.width / 4, screenSize.height / 10);
 
-        Model model = new Model();
-        ViewRobot viewRobot = new ViewRobot(model);
-        viewRobot.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
-        viewRobot.setLocation(screenSize.width / 4, screenSize.height / 10);
+        CoordinatesWindow coordinatesWindow = new CoordinatesWindow(model);
 
-        //addWindow(viewRobot);
-        addWindow(logWindow);
+        coordinatesWindow.setSize(200, 150);
+        coordinatesWindow.setLocation(screenSize.width / 2, screenSize.height / 100);
+
+        addWindow(coordinatesWindow);
         addWindow(gameWindow);
+        addWindow(logWindow);
 
         setJMenuBar(generateMenuBar());
         setDefaultCloseOperation(EXIT_ON_CLOSE);

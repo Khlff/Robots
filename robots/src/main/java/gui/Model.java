@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Model {
-    private volatile double m_robotPositionX = 100;
+    private volatile double m_robotPositionX = 101;
     private volatile double m_robotPositionY = 100;
     private volatile double m_robotDirection = 0;
 
@@ -54,7 +54,6 @@ public class Model {
                 super.mouseClicked(e);
                 Point target = e.getPoint();
                 setTargetPosition(target);
-
             }
         });
     }

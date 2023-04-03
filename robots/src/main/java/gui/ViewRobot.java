@@ -9,7 +9,7 @@ import java.awt.geom.AffineTransform;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ViewRobot extends JInternalFrame implements Panel {
+public class ViewRobot extends JPanel implements Panel {
     JPanel gamePanel = new JPanel(new BorderLayout());
     Model model;
 
@@ -19,11 +19,6 @@ public class ViewRobot extends JInternalFrame implements Panel {
 
 
     ViewRobot(Model model) {
-        super("Игровое поле", true, true, true, true);
-
-
-        this.model = model;
-        model.addMouseListener(gamePanel);
         Timer m_timer = initTimer();
         m_timer.schedule(new TimerTask() {
             @Override
@@ -31,33 +26,32 @@ public class ViewRobot extends JInternalFrame implements Panel {
                 onRedrawEvent();
             }
         }, 0, 50);
-       m_timer.schedule(new TimerTask() {
+        m_timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 model.onModelUpdateEvent();
             }
         }, 0, 10);
-
+        this.model = model;
         model.addObserver(this);
         gamePanel.setDoubleBuffered(true);
-        getContentPane().add(gamePanel);
-        pack();
+
     }
 
     @Override
     public void update() {
         repaint();
     }
-    private int round(double value)
-    {
-        return (int)(value + 0.5);
+
+    private int round(double value) {
+        return (int) (value + 0.5);
     }
+
     @Override
-    public void paint(Graphics g)
-    {
+    public void paint(Graphics g) {
         super.paint(g);
-        Graphics2D g2d = (Graphics2D)g;
-        drawRobot(g2d, round(model.getM_robotPositionX()), round(model.getM_robotPositionY()), model.getM_robotDirection());
+        Graphics2D g2d = (Graphics2D) g;
+        drawRobot(g2d, model.getM_robotDirection());
         drawTarget(g2d, model.getM_targetPositionX(), model.getM_targetPositionY());
     }
 
@@ -73,9 +67,9 @@ public class ViewRobot extends JInternalFrame implements Panel {
         g.drawOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
     }
 
-    private void drawRobot(Graphics2D g, int x, int y, double direction) {
-        int robotCenterX = model.getM_targetPositionX();
-        int robotCenterY = model.getM_targetPositionY();
+    private void drawRobot(Graphics2D g, double direction) {
+        int robotCenterX = round(model.getM_targetPositionX());
+        int robotCenterY = round(model.getM_targetPositionY());
         AffineTransform t = AffineTransform.getRotateInstance(direction, robotCenterX, robotCenterY);
         g.setTransform(t);
         g.setColor(Color.MAGENTA);

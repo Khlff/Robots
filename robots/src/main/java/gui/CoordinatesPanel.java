@@ -3,28 +3,30 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 
-public class CoordinatesPanel extends JInternalFrame implements Panel {
+public class CoordinatesPanel extends JPanel implements Panel {
     Model model;
     JPanel coordinatesPanel = new JPanel(new BorderLayout());
-    private JLabel xLabel;
-    private JLabel yLabel;
+    JLabel xLabel = new JLabel("a");
+    JLabel yLabel = new JLabel("b");
+
     CoordinatesPanel(Model model) {
-        super("Координаты");
-        xLabel = new JLabel();
-        yLabel = new JLabel();
-        coordinatesPanel.add(xLabel);
-        coordinatesPanel.add(yLabel);
-        xLabel.setText(String.valueOf(model.getM_robotPositionX()));
-        yLabel.setText(String.valueOf(model.getM_robotPositionY()));
+        add(yLabel);
+        add(xLabel);
+        xLabel.setText(String.valueOf(round(model.getM_robotPositionX())));
+        yLabel.setText(String.valueOf(round(model.getM_robotPositionY())));
+
         this.model = model;
         model.addObserver(this);
 
-        getContentPane().add(coordinatesPanel);
-        pack();
+    }
+
+    private int round(double value) {
+        return (int) (value + 0.5);
     }
 
     @Override
     public void update() {
-
+        xLabel.setText(String.valueOf(round(model.getM_robotPositionX())));
+        yLabel.setText(String.valueOf(round(model.getM_robotPositionY())));
     }
 }
