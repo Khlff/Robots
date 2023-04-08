@@ -30,7 +30,6 @@ public class Model {
     public int getM_targetPositionY() {
         return round(m_targetPositionY);
     }
-
     public double getM_robotDirection() {
         return m_robotDirection;
     }
