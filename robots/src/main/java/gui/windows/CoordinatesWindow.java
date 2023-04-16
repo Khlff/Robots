@@ -1,15 +1,17 @@
-package gui;
+package gui.windows;
+
+import gui.MVC.Controller;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class CoordinatesWindow extends JInternalFrame{
-    private Model model;
-    public CoordinatesWindow(Model model)
+    private Controller controller;
+    public CoordinatesWindow(Controller controller)
     {
         super("Координаты", false, true, false, true);
-        this.model = model;
-        CoordinatesPanel coordinatesPanel = new CoordinatesPanel(model);
+        this.controller = controller;
+        CoordinatesPanel coordinatesPanel = new CoordinatesPanel(controller);
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(coordinatesPanel, BorderLayout.CENTER);
         getContentPane().add(panel);

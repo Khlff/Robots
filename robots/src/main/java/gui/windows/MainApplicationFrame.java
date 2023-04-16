@@ -1,5 +1,8 @@
-package gui;
+package gui.windows;
 
+import gui.MVC.Controller;
+import gui.MVC.RobotModel;
+import gui.MVC.TargetModel;
 import log.Logger;
 
 import javax.swing.*;
@@ -7,7 +10,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Locale;
 
-import static gui.ConstantsGUI.*;
+import static gui.windows.ConstantsGUI.*;
 
 
 public class MainApplicationFrame extends JFrame {
@@ -27,13 +30,17 @@ public class MainApplicationFrame extends JFrame {
         fc.updateUI();
 
         LogWindow logWindow = createLogWindow();
-        Model model = new Model();
-        GameWindow gameWindow = new GameWindow(model);
+
+
+
+        RobotModel robotModel = new RobotModel();
+        TargetModel targetModel = new TargetModel();
+        Controller controller = new Controller(robotModel, targetModel);
+        GameWindow gameWindow = new GameWindow(controller);
         gameWindow.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
         gameWindow.setLocation(screenSize.width / 4, screenSize.height / 10);
 
-        CoordinatesWindow coordinatesWindow = new CoordinatesWindow(model);
-
+        CoordinatesWindow coordinatesWindow = new CoordinatesWindow(controller);
         coordinatesWindow.setSize(COORDINATES_WIDTH, COORDINATES_HEIGHT);
         coordinatesWindow.setLocation(screenSize.width / 2, screenSize.height / 100);
 

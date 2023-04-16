@@ -1,4 +1,4 @@
-package gui;
+package gui.windows;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -11,7 +11,7 @@ import log.LogChangeListener;
 import log.LogEntry;
 import log.LogWindowSource;
 
-import static gui.ConstantsGUI.*;
+import static gui.windows.ConstantsGUI.*;
 
 public class LogWindow extends JInternalFrame implements LogChangeListener
 {

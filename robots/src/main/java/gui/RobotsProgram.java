@@ -1,5 +1,7 @@
 package gui;
 
+import gui.windows.MainApplicationFrame;
+
 import java.awt.Frame;
 
 import javax.swing.SwingUtilities;
@@ -18,6 +20,7 @@ public class RobotsProgram
       }
       SwingUtilities.invokeLater(() -> {
         MainApplicationFrame frame = new MainApplicationFrame();
+
         frame.pack();
         frame.setVisible(true);
         frame.setExtendedState(Frame.MAXIMIZED_BOTH);
