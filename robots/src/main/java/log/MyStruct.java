@@ -1,29 +1,27 @@
 package log;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 
 public class MyStruct {
     private int structureSize;
-    private List<LogEntry> list;
+    private Queue<LogEntry> queue;
 
     public MyStruct(int structureSize) {
         this.structureSize = structureSize;
-        list = new ArrayList<>(structureSize);
-        list = Collections.synchronizedList(list);
+        queue = new LinkedList<>();
     }
 
     public void add(LogEntry element) {
-        if (list.size() == structureSize) {
-            list.remove(0);
+        if (queue.size() == structureSize) {
+            queue.poll();
         }
-        list.add(element);
+        queue.add(element);
     }
 
 
     public List<LogEntry> getSlice(int startIndex, int endIndex) {
+        List<LogEntry> list = new ArrayList<>(queue);
         return list.subList(startIndex, endIndex);
     }
 
@@ -36,11 +34,11 @@ public class MyStruct {
     }
 
     public int size() {
-        return this.list.size();
+        return this.queue.size();
     }
 
     public Iterable<LogEntry> getIter() {
-        Iterable<LogEntry> iterable = list;
+        Iterable<LogEntry> iterable = queue;
         return iterable;
     }
 }
