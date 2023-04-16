@@ -1,6 +1,7 @@
 package log;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 public class MyStruct {
@@ -9,7 +10,7 @@ public class MyStruct {
 
     public MyStruct(int structureSize) {
         this.structureSize = structureSize;
-        queue = new LinkedList<>();
+        queue = new ConcurrentLinkedQueue<>();
     }
 
     public void add(LogEntry element) {
