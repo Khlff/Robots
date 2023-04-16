@@ -1,12 +1,9 @@
-package gui;
+package gui.MVC;
 
 public class Entity {
     protected double xCoordinate;
     protected double yCoordinate;
 
-    public double getXCoordinate() {
-        return xCoordinate;
-    }
 
     public void setXCoordinate(double xCoordinate) {
         this.xCoordinate = xCoordinate;
@@ -18,6 +15,10 @@ public class Entity {
 
     public double getYCoordinate() {
         return yCoordinate;
+    }
+
+    public double getXCoordinate() {
+        return xCoordinate;
     }
 
 

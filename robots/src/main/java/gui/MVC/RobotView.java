@@ -1,24 +1,24 @@
-package gui;
+package gui.MVC;
 
 import javax.swing.*;
+
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ViewRobot extends JPanel implements Panel {
-    JPanel gamePanel = new JPanel(new BorderLayout());
-    Model model;
+import static gui.MVC.ModelsConstants.*;
 
-    private static java.util.Timer initTimer() {
+public class RobotView extends JPanel {
+    Controller controller;
+
+
+    private static Timer initTimer() {
         return new Timer("events generator", true);
     }
 
-
-    ViewRobot(Model model) {
+    public RobotView(Controller controller) {
+        this.controller = controller;
         Timer m_timer = initTimer();
         m_timer.schedule(new TimerTask() {
             @Override
@@ -29,34 +29,33 @@ public class ViewRobot extends JPanel implements Panel {
         m_timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                model.onModelUpdateEvent();
+                onModelUpdateEvent();
             }
         }, 0, 10);
-        this.model = model;
-        model.addObserver(this);
-        gamePanel.setDoubleBuffered(true);
-
-    }
-
-    @Override
-    public void update() {
-        repaint();
-    }
-
-    private int round(double value) {
-        return (int) (value + 0.5);
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-        Graphics2D g2d = (Graphics2D) g;
-        drawRobot(g2d, model.getM_robotDirection());
-        drawTarget(g2d, model.getM_targetPositionX(), model.getM_targetPositionY());
     }
 
     protected void onRedrawEvent() {
         EventQueue.invokeLater(this::repaint);
+    }
+
+    protected void onModelUpdateEvent() {
+        double distance = controller.distance();
+
+        if (distance < 0.5) {
+            return;
+        }
+
+        double angleToTarget = controller.angleTo();
+        double angularVelocity = 0;
+
+        if (angleToTarget > controller.getRobotModel().getRobotDirection()) {
+            angularVelocity = DEFAULT_ROBOT_ANGULAR_VELOCITY;
+        }
+        if (angleToTarget < controller.getRobotModel().getRobotDirection()) {
+            angularVelocity = -DEFAULT_ROBOT_ANGULAR_VELOCITY;
+        }
+
+        controller.getRobotModel().moveRobot(DEFAULT_ROBOT_VELOCITY, angularVelocity, 10);
     }
 
     private static void fillOval(Graphics g, int centerX, int centerY, int diam1, int diam2) {
@@ -68,8 +67,8 @@ public class ViewRobot extends JPanel implements Panel {
     }
 
     private void drawRobot(Graphics2D g, double direction) {
-        int robotCenterX = round(model.getM_targetPositionX());
-        int robotCenterY = round(model.getM_targetPositionY());
+        int robotCenterX = (int) controller.getRobotModel().getXCoordinate();
+        int robotCenterY = (int) controller.getRobotModel().getYCoordinate();
         AffineTransform t = AffineTransform.getRotateInstance(direction, robotCenterX, robotCenterY);
         g.setTransform(t);
         g.setColor(Color.MAGENTA);
@@ -91,4 +90,16 @@ public class ViewRobot extends JPanel implements Panel {
         drawOval(g, x, y, 5, 5);
     }
 
+    protected static int round(double value) {
+        return (int) (value + 0.5);
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        Graphics2D g2d = (Graphics2D) g;
+        drawRobot(g2d, controller.getRobotModel().getRobotDirection());
+        drawTarget(g2d, round(controller.getTargetModel().getXCoordinate()),
+                round(controller.getTargetModel().getYCoordinate()));
+    }
 }
