@@ -1,18 +1,18 @@
 package gui.windows;
 
 import gui.MVC.Controller;
-import gui.MVC.Panel;
+import gui.MVC.Observer;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class CoordinatesPanel extends JPanel implements Panel {
+public class CoordinatesObserver extends JPanel implements Observer {
     private Controller controller;
     JPanel coordinatesPanel = new JPanel(new BorderLayout());
     JLabel xLabel = new JLabel();
     JLabel yLabel = new JLabel();
 
-    public CoordinatesPanel(Controller controller) {
+    public CoordinatesObserver(Controller controller) {
         this.controller = controller;
         this.controller.getRobotModel().addObserver(this);
         add(yLabel);

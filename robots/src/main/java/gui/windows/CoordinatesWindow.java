@@ -11,7 +11,7 @@ public class CoordinatesWindow extends JInternalFrame{
     {
         super("Координаты", false, true, false, true);
         this.controller = controller;
-        CoordinatesPanel coordinatesPanel = new CoordinatesPanel(controller);
+        CoordinatesObserver coordinatesPanel = new CoordinatesObserver(controller);
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(coordinatesPanel, BorderLayout.CENTER);
         getContentPane().add(panel);

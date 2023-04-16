@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import static gui.MVC.ModelsConstants.*;
 
 public class RobotModel extends Entity {
-    private ArrayList<Panel> observers;
+    private ArrayList<Observer> observers;
     private volatile double robotDirection = 0;
 
     public RobotModel() {
@@ -15,12 +15,12 @@ public class RobotModel extends Entity {
         setRobotDirection(DEFAULT_ROBOT_ANGULAR_VELOCITY);
     }
 
-    public void addObserver(Panel observer) {
+    public void addObserver(Observer observer) {
         observers.add(observer);
     }
 
     public void notifyObservers() {
-        for (Panel observer : observers) {
+        for (Observer observer : observers) {
             observer.update();
         }
     }
