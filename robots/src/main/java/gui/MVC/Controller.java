@@ -45,7 +45,7 @@ public class Controller {
 
     protected double angleTo() {
         double diffX = targetModel.getXCoordinate() - robotModel.getXCoordinate();
-        double diffY = targetModel.getXCoordinate() - robotModel.getYCoordinate();
+        double diffY = targetModel.getYCoordinate() - robotModel.getYCoordinate();
         return RobotModel.asNormalizedRadians(Math.atan2(diffY, diffX));
     }
 }

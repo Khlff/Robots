@@ -6,7 +6,7 @@ import static gui.MVC.ModelsConstants.*;
 
 public class RobotModel extends Entity {
     private ArrayList<Observer> observers;
-    private volatile double robotDirection = 0;
+    private double robotDirection = 0;
 
     public RobotModel() {
         observers = new ArrayList<>();
@@ -64,9 +64,12 @@ public class RobotModel extends Entity {
         if (!Double.isFinite(newY)) {
             newY = yCoordinate + velocity * duration * Math.sin(robotDirection);
         }
-        xCoordinate = (float) newX;
-        yCoordinate = (float) newY;
-        robotDirection = (float) asNormalizedRadians(robotDirection + angularVelocity * duration);
+        double newDirection = asNormalizedRadians(robotDirection + angularVelocity * duration);
+        robotDirection = newDirection;
+        xCoordinate =  newX;
+        yCoordinate =  newY;
+        robotDirection = asNormalizedRadians(robotDirection + angularVelocity * duration);
+
         notifyObservers();
     }
 
