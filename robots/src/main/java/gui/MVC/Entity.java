@@ -1,8 +1,10 @@
 package gui.MVC;
 
-public class Entity {
+abstract class Entity {
     protected double xCoordinate;
     protected double yCoordinate;
+
+    protected int size;
 
 
     public void setXCoordinate(double xCoordinate) {
@@ -21,5 +23,12 @@ public class Entity {
         return xCoordinate;
     }
 
+    public int getSize(){
+        return size;
+    }
+
+    public void setSize(int size){
+        this.size = size;
+    }
 
 }

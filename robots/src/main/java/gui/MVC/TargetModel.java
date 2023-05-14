@@ -1,10 +1,14 @@
 package gui.MVC;
 
+import gui.windows.GameWindow;
+
 import java.awt.*;
 import java.util.ArrayList;
 
-import static gui.MVC.ModelsConstants.DEFAULT_X_TARGET_POSITION;
-import static gui.MVC.ModelsConstants.DEFAULT_Y_TARGET_POSITION;
+
+import static gui.windows.ConstantsGUI.GAME_WINDOW_WIDTH;
+import static gui.windows.ConstantsGUI.GAME_WINDOW_HEIGHT;
+import static gui.MVC.ModelsConstants.DEFAULT_TARGET_SIZE;
 
 public class TargetModel extends Entity {
     private ArrayList<Observer> observers;
@@ -15,8 +19,9 @@ public class TargetModel extends Entity {
     }
 
     public TargetModel() {
-        setYCoordinate(DEFAULT_Y_TARGET_POSITION);
-        setXCoordinate(DEFAULT_X_TARGET_POSITION);
+        setYCoordinate(Math.random() * GAME_WINDOW_HEIGHT);
+        setXCoordinate(Math.random() * GAME_WINDOW_WIDTH);
+        setSize(DEFAULT_TARGET_SIZE);
         observers = new ArrayList<>();
     }
 

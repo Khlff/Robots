@@ -13,6 +13,7 @@ public class RobotModel extends Entity {
         setXCoordinate(DEFAULT_X_ROBOT_POSITION);
         setYCoordinate(DEFAULT_Y_ROBOT_POSITION);
         setRobotDirection(DEFAULT_ROBOT_ANGULAR_VELOCITY);
+        setSize(DEFAULT_ROBOT_SIZE);
     }
 
     public void addObserver(Observer observer) {

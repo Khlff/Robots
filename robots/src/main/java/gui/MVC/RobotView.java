@@ -11,6 +11,8 @@ import static gui.MVC.ModelsConstants.*;
 
 public class RobotView extends JPanel {
     Controller controller;
+    Boolean flag = false;
+    int number = 0;
 
 
     private static Timer initTimer() {
@@ -41,19 +43,32 @@ public class RobotView extends JPanel {
     protected void onModelUpdateEvent() {
         double distance = controller.distance();
 
+        if (distance < controller.getRobotModel().getSize() / 2 && distance > controller.getRobotModel().getSize() / 2 - 1){
+            flag = true;
+        }
+
         if (distance < 0.5) {
             return;
         }
+        if (flag) {
+            controller.getRobotModel().setSize(controller.getRobotModel().getSize() + 10);
+            flag = false;
+        }
+
+
 
         double angleToTarget = controller.angleTo();
         double angularVelocity = 0;
 
-        if (angleToTarget > controller.getRobotModel().getRobotDirection()) {
+
+
+        if (RobotModel.asNormalizedRadians(controller.getRobotModel().getRobotDirection() - angleToTarget) > Math.PI){
             angularVelocity = DEFAULT_ROBOT_ANGULAR_VELOCITY;
         }
-        if (angleToTarget < controller.getRobotModel().getRobotDirection()) {
+        else if(controller.getRobotModel().getRobotDirection() != angleToTarget){
             angularVelocity = -DEFAULT_ROBOT_ANGULAR_VELOCITY;
         }
+
 
         controller.getRobotModel().moveRobot(DEFAULT_ROBOT_VELOCITY, angularVelocity, 10);
     }
@@ -66,28 +81,24 @@ public class RobotView extends JPanel {
         g.drawOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
     }
 
-    private void drawRobot(Graphics2D g, double direction) {
+    private void drawRobot(Graphics2D g, double direction, int robotSize) {
         int robotCenterX = (int) controller.getRobotModel().getXCoordinate();
         int robotCenterY = (int) controller.getRobotModel().getYCoordinate();
         AffineTransform t = AffineTransform.getRotateInstance(direction, robotCenterX, robotCenterY);
         g.setTransform(t);
         g.setColor(Color.MAGENTA);
-        fillOval(g, robotCenterX, robotCenterY, 30, 10);
+        fillOval(g, robotCenterX, robotCenterY, robotSize, robotSize);
         g.setColor(Color.BLACK);
-        drawOval(g, robotCenterX, robotCenterY, 30, 10);
-        g.setColor(Color.WHITE);
-        fillOval(g, robotCenterX + 10, robotCenterY, 5, 5);
-        g.setColor(Color.BLACK);
-        drawOval(g, robotCenterX + 10, robotCenterY, 5, 5);
+        drawOval(g, robotCenterX, robotCenterY,  robotSize,  robotSize);
     }
 
-    private void drawTarget(Graphics2D g, int x, int y) {
+    private void drawTarget(Graphics2D g, int x, int y, int targetSize) {
         AffineTransform t = AffineTransform.getRotateInstance(0, 0, 0);
         g.setTransform(t);
         g.setColor(Color.GREEN);
-        fillOval(g, x, y, 5, 5);
+        fillOval(g, x, y, targetSize, targetSize);
         g.setColor(Color.BLACK);
-        drawOval(g, x, y, 5, 5);
+        drawOval(g, x, y, targetSize, targetSize);
     }
 
     protected static int round(double value) {
@@ -98,8 +109,8 @@ public class RobotView extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
-        drawRobot(g2d, controller.getRobotModel().getRobotDirection());
-        drawTarget(g2d, round(controller.getTargetModel().getXCoordinate()),
-                round(controller.getTargetModel().getYCoordinate()));
+        drawRobot(g2d, controller.getRobotModel().getRobotDirection(), controller.getRobotModel().getSize());
+        drawTarget(g2d,round(controller.getTargetModel().getXCoordinate()),
+                round(controller.getTargetModel().getYCoordinate()), controller.getTargetModel().getSize());
     }
 }
