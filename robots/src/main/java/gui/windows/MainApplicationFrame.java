@@ -1,6 +1,7 @@
 package gui.windows;
 
 import gui.MVC.Controller;
+import gui.MVC.MouseModel;
 import gui.MVC.RobotModel;
 import gui.MVC.TargetModel;
 import log.Logger;
@@ -31,11 +32,10 @@ public class MainApplicationFrame extends JFrame {
 
         LogWindow logWindow = createLogWindow();
 
-
-
         RobotModel robotModel = new RobotModel();
         TargetModel targetModel = new TargetModel();
-        Controller controller = new Controller(robotModel, targetModel);
+        MouseModel mouseModel = new MouseModel();
+        Controller controller = new Controller(robotModel, targetModel, mouseModel);
         GameWindow gameWindow = new GameWindow(controller);
         gameWindow.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
         gameWindow.setLocation(screenSize.width / 4, screenSize.height / 10);

@@ -5,9 +5,10 @@ import java.util.ArrayList;
 import static gui.MVC.ModelsConstants.*;
 
 public class RobotModel extends Entity {
-    private ArrayList<Observer> observers;
+    private final ArrayList<Observer> observers;
     private double robotDirection = 0;
-    private double robotSpeed = DEFAULT_ROBOT_VELOCITY;
+    private double robotVelocity = DEFAULT_ROBOT_VELOCITY;
+    private double robotSpeed = DEFAULT_ROBOT_SPEED;
 
     public RobotModel() {
         observers = new ArrayList<>();
@@ -22,7 +23,7 @@ public class RobotModel extends Entity {
     }
 
     public void setRobotSpeed(double robotSpeed) {
-        if (!(this.robotSpeed < 0.01)) {
+        if (!(this.robotSpeed == 0.5)) {
             this.robotSpeed = robotSpeed;
         }
     }
@@ -61,26 +62,25 @@ public class RobotModel extends Entity {
         return angle;
     }
 
-    protected void moveRobot(double angularVelocity, double duration) {
-        this.robotSpeed = applyLimits(this.robotSpeed, 0, DEFAULT_ROBOT_VELOCITY);
+    protected void moveRobot(double angularVelocity) {
+        this.robotVelocity = applyLimits(this.robotVelocity, 0, DEFAULT_ROBOT_VELOCITY);
         angularVelocity = applyLimits(angularVelocity, -DEFAULT_ROBOT_ANGULAR_VELOCITY, DEFAULT_ROBOT_ANGULAR_VELOCITY);
-        double newX = xCoordinate + this.robotSpeed / angularVelocity *
-                (Math.sin(robotDirection + angularVelocity * duration) -
+        double newX = xCoordinate + this.robotVelocity / angularVelocity *
+                (Math.sin(robotDirection + angularVelocity * robotSpeed) -
                         Math.sin(robotDirection));
         if (!Double.isFinite(newX)) {
-            newX = xCoordinate + this.robotSpeed * duration * Math.cos(robotDirection);
+            newX = xCoordinate + this.robotVelocity * robotSpeed * Math.cos(robotDirection);
         }
-        double newY = yCoordinate - this.robotSpeed / angularVelocity *
-                (Math.cos(robotDirection + angularVelocity * duration) -
+        double newY = yCoordinate - this.robotVelocity / angularVelocity *
+                (Math.cos(robotDirection + angularVelocity * robotSpeed) -
                         Math.cos(robotDirection));
         if (!Double.isFinite(newY)) {
-            newY = yCoordinate + this.robotSpeed * duration * Math.sin(robotDirection);
+            newY = yCoordinate + this.robotVelocity * robotSpeed * Math.sin(robotDirection);
         }
-        double newDirection = asNormalizedRadians(robotDirection + angularVelocity * duration);
-        robotDirection = newDirection;
+        robotDirection = asNormalizedRadians(robotDirection + angularVelocity * robotSpeed);
         xCoordinate = newX;
         yCoordinate = newY;
-        robotDirection = asNormalizedRadians(robotDirection + angularVelocity * duration);
+        robotDirection = asNormalizedRadians(robotDirection + angularVelocity * robotSpeed);
 
         notifyObservers();
     }

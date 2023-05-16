@@ -1,10 +1,6 @@
 package gui.MVC;
 
-import gui.MVC.RobotModel;
-import gui.MVC.TargetModel;
-
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -12,10 +8,12 @@ public class Controller {
 
     private final RobotModel robotModel;
     private final TargetModel targetModel;
+    private final MouseModel mouseModel;
 
-    public Controller(RobotModel robotModel, TargetModel targetModel) {
+    public Controller(RobotModel robotModel, TargetModel targetModel, MouseModel mouseModel) {
         this.targetModel = targetModel;
         this.robotModel = robotModel;
+        this.mouseModel = mouseModel;
     }
 
     public RobotModel getRobotModel() {
@@ -27,12 +25,11 @@ public class Controller {
     }
 
     public void addMouseListener(JPanel panel) {
-        panel.addMouseListener(new MouseAdapter() {
+        panel.addMouseMotionListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                targetModel.setTargetPosition(e.getPoint());
-
+            public void mouseMoved(MouseEvent e) {
+                mouseModel.setXCoordinate(e.getX());
+                mouseModel.setYCoordinate(e.getY());
             }
         });
 
@@ -45,8 +42,8 @@ public class Controller {
     }
 
     protected double angleTo() {
-        double diffX = targetModel.getXCoordinate() - robotModel.getXCoordinate();
-        double diffY = targetModel.getYCoordinate() - robotModel.getYCoordinate();
+        double diffX = mouseModel.getXCoordinate() - robotModel.getXCoordinate();
+        double diffY = mouseModel.getYCoordinate() - robotModel.getYCoordinate();
         return RobotModel.asNormalizedRadians(Math.atan2(diffY, diffX));
     }
 

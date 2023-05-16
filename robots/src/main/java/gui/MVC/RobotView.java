@@ -12,8 +12,6 @@ import static gui.MVC.ModelsConstants.*;
 public class RobotView extends JPanel {
     Controller controller;
     Boolean flag = false;
-    int number = 0;
-
 
     private static Timer initTimer() {
         return new Timer("events generator", true);
@@ -46,7 +44,7 @@ public class RobotView extends JPanel {
         if (distance < (double) controller.getRobotModel().getSize() / 2 && distance > (double) controller.getRobotModel().getSize() / 2 - 1) {
             controller.getRobotModel().setSize(controller.getRobotModel().getSize() + 10);
             controller.generateNewTargetCoordinates();
-            controller.setRobotSpeed(controller.getRobotSpeed() - 0.005);
+            controller.setRobotSpeed(controller.getRobotSpeed() - 0.5);
             flag = false;
         }
 
@@ -54,10 +52,8 @@ public class RobotView extends JPanel {
             return;
         }
 
-
         double angleToTarget = controller.angleTo();
         double angularVelocity = 0;
-
 
         if (RobotModel.asNormalizedRadians(controller.getRobotModel().getRobotDirection() - angleToTarget) > Math.PI) {
             angularVelocity = DEFAULT_ROBOT_ANGULAR_VELOCITY;
@@ -65,8 +61,7 @@ public class RobotView extends JPanel {
             angularVelocity = -DEFAULT_ROBOT_ANGULAR_VELOCITY;
         }
 
-
-        controller.getRobotModel().moveRobot(angularVelocity, 10);
+        controller.getRobotModel().moveRobot(angularVelocity);
     }
 
     private static void fillOval(Graphics g, int centerX, int centerY, int diam1, int diam2) {
