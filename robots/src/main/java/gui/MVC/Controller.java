@@ -4,18 +4,18 @@ import gui.MVC.RobotModel;
 import gui.MVC.TargetModel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Controller {
 
-    private RobotModel robotModel;
-    private TargetModel targetModel;
+    private final RobotModel robotModel;
+    private final TargetModel targetModel;
 
     public Controller(RobotModel robotModel, TargetModel targetModel) {
         this.targetModel = targetModel;
         this.robotModel = robotModel;
-
     }
 
     public RobotModel getRobotModel() {
@@ -35,6 +35,7 @@ public class Controller {
 
             }
         });
+
     }
 
     protected double distance() {
@@ -47,6 +48,21 @@ public class Controller {
         double diffX = targetModel.getXCoordinate() - robotModel.getXCoordinate();
         double diffY = targetModel.getYCoordinate() - robotModel.getYCoordinate();
         return RobotModel.asNormalizedRadians(Math.atan2(diffY, diffX));
+    }
+
+    /**
+     * Генерирует новые координаты таргету
+     */
+    protected void generateNewTargetCoordinates() {
+        this.targetModel.generateNewCoordinates();
+    }
+
+    protected void setRobotSpeed(double newSpeed) {
+        this.robotModel.setRobotSpeed(newSpeed);
+    }
+
+    protected double getRobotSpeed() {
+        return this.robotModel.getRobotSpeed();
     }
 }
 

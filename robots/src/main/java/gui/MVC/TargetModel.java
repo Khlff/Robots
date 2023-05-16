@@ -19,14 +19,19 @@ public class TargetModel extends Entity {
     }
 
     public TargetModel() {
-        setYCoordinate(Math.random() * GAME_WINDOW_HEIGHT);
         setXCoordinate(Math.random() * GAME_WINDOW_WIDTH);
+        setYCoordinate(Math.random() * GAME_WINDOW_HEIGHT);
         setSize(DEFAULT_TARGET_SIZE);
         observers = new ArrayList<>();
     }
 
     public void addObserver(Observer observer) {
         observers.add(observer);
+    }
+
+    public void generateNewCoordinates(){
+        setXCoordinate(Math.random() * GAME_WINDOW_WIDTH);
+        setYCoordinate(Math.random() * GAME_WINDOW_HEIGHT);
     }
 
     public void notifyObservers() {
