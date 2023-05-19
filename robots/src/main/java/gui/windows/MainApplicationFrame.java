@@ -35,7 +35,7 @@ public class MainApplicationFrame extends JFrame {
         RobotModel robotModel = new RobotModel();
         TargetModel targetModel = new TargetModel();
         MouseModel mouseModel = new MouseModel();
-        Controller controller = new Controller(robotModel, targetModel, mouseModel);
+        Controller controller = new Controller(robotModel, mouseModel);
         GameWindow gameWindow = new GameWindow(controller);
         gameWindow.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
         gameWindow.setLocation(screenSize.width / 4, screenSize.height / 10);

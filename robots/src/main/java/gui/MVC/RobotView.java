@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -11,7 +12,6 @@ import static gui.MVC.ModelsConstants.*;
 
 public class RobotView extends JPanel {
     Controller controller;
-    Boolean flag = false;
 
     private static Timer initTimer() {
         return new Timer("events generator", true);
@@ -39,18 +39,18 @@ public class RobotView extends JPanel {
     }
 
     protected void onModelUpdateEvent() {
-        double distance = controller.distance();
-
-        if (distance < (double) controller.getRobotModel().getSize() / 2 && distance > (double) controller.getRobotModel().getSize() / 2 - 1) {
-            controller.getRobotModel().setSize(controller.getRobotModel().getSize() + 10);
-            controller.generateNewTargetCoordinates();
-            controller.setRobotSpeed(controller.getRobotSpeed() - 0.5);
-            flag = false;
+        ArrayList<Double> distances = controller.distance();
+        for (Double distance : distances) {
+            if (distance < (double) controller.getRobotModel().getSize() / 2 && distance > (double) controller.getRobotModel().getSize() / 2 - 1) {
+                controller.getRobotModel().setSize(controller.getRobotModel().getSize() + 10);
+                controller.generateNewTargetCoordinates(distances.indexOf(distance));
+                controller.setRobotSpeed(controller.getRobotSpeed() - 0.5);
+            }
+            if (distance < 0.5) {
+                return;
+            }
         }
 
-        if (distance < 0.5) {
-            return;
-        }
 
         double angleToTarget = controller.angleTo();
         double angularVelocity = 0;
@@ -101,7 +101,9 @@ public class RobotView extends JPanel {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
         drawRobot(g2d, controller.getRobotModel().getRobotDirection(), controller.getRobotModel().getSize());
-        drawTarget(g2d, round(controller.getTargetModel().getXCoordinate()),
-                round(controller.getTargetModel().getYCoordinate()), controller.getTargetModel().getSize());
+        for (TargetModel target : controller.getTargets()) {
+            drawTarget(g2d, round(target.getXCoordinate()),
+                    round(target.getYCoordinate()), target.getSize());
+        }
     }
 }
