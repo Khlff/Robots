@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import static gui.MVC.ModelsConstants.DEFAULT_ROBOT_ANGULAR_VELOCITY;
+import static gui.MVC.ModelsConstants.DEFAULT_SPIKE_SIZE;
 
 public class Controller {
     private final ArrayList<Observer> observers;
@@ -28,12 +29,13 @@ public class Controller {
     }
     protected void onModelUpdateEvent() {
         ArrayList<Double> distances = calculateDistance();
+        double distanceToSpike = distanceToSpike();
         for (Double distance : distances) {
             if (distance < (double) getRobotModel().getSize() / 2 && distance >
                     (double) getRobotModel().getSize() / 2 - 1) {
                 Game.getInstance().setScoreOfGame();
                 notifyObservers();
-                if (distances.size() < 2) {
+                if (distances.size() < 3) {
 
                     getRobotModel().setSize(getRobotModel().getSize() + 10);
                     generateNewTargets();
@@ -44,6 +46,9 @@ public class Controller {
                     deleteTarget(distances.indexOf(distance));
                     setRobotSpeed(getRobotSpeed() - 0.5);
                 }
+            }
+            if (distanceToSpike < DEFAULT_SPIKE_SIZE / 2){
+                System.exit(0);
             }
             if (distance < 0.5) {
                 return;
