@@ -1,23 +1,27 @@
 package gui.MVC;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import static gui.MVC.ModelsConstants.*;
 
-public class RobotView extends JPanel {
+public class View extends JPanel {
     Controller controller;
 
     private static Timer initTimer() {
         return new Timer("events generator", true);
     }
 
-    public RobotView(Controller controller) {
+    public View(Controller controller) {
         this.controller = controller;
         Timer m_timer = initTimer();
         m_timer.schedule(new TimerTask() {
@@ -51,7 +55,6 @@ public class RobotView extends JPanel {
             }
         }
 
-
         double angleToTarget = controller.angleTo();
         double angularVelocity = 0;
 
@@ -61,49 +64,53 @@ public class RobotView extends JPanel {
             angularVelocity = -DEFAULT_ROBOT_ANGULAR_VELOCITY;
         }
 
-        controller.getRobotModel().moveRobot(angularVelocity);
+        controller.getRobotModel().move(angularVelocity);
     }
 
-    private static void fillOval(Graphics g, int centerX, int centerY, int diam1, int diam2) {
-        g.fillOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
-    }
 
-    private static void drawOval(Graphics g, int centerX, int centerY, int diam1, int diam2) {
-        g.drawOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
-    }
-
-    private void drawRobot(Graphics2D g, double direction, int robotSize) {
-        int robotCenterX = (int) controller.getRobotModel().getXCoordinate();
-        int robotCenterY = (int) controller.getRobotModel().getYCoordinate();
-        AffineTransform t = AffineTransform.getRotateInstance(direction, robotCenterX, robotCenterY);
+    /**
+     * Функция, которая отвечает за отрисовку текстуры модели.
+     *
+     * @param model       модель, у которой отрисовываем
+     * @param texturePath путь, к текстуре
+     */
+    private void draw(Graphics2D g, GameEntity model, String texturePath) {
+        int modelCenterX = (int) model.getXCoordinate();
+        int modelCenterY = (int) model.getYCoordinate();
+        AffineTransform t = AffineTransform.getRotateInstance(0, modelCenterX, modelCenterY);
         g.setTransform(t);
-        g.setColor(Color.MAGENTA);
-        fillOval(g, robotCenterX, robotCenterY, robotSize, robotSize);
-        g.setColor(Color.BLACK);
-        drawOval(g, robotCenterX, robotCenterY, robotSize, robotSize);
-    }
 
-    private void drawTarget(Graphics2D g, int x, int y, int targetSize) {
-        AffineTransform t = AffineTransform.getRotateInstance(0, 0, 0);
-        g.setTransform(t);
-        g.setColor(Color.GREEN);
-        fillOval(g, x, y, targetSize, targetSize);
-        g.setColor(Color.BLACK);
-        drawOval(g, x, y, targetSize, targetSize);
-    }
-
-    protected static int round(double value) {
-        return (int) (value + 0.5);
+        BufferedImage texture;
+        try {
+            texture = ImageIO.read(new File(texturePath));
+            g.drawOval(
+                    modelCenterX - model.getSize() / 2,
+                    modelCenterY - model.getSize() / 2,
+                    model.getSize(), model.getSize()
+            );
+            g.drawImage(
+                    texture,
+                    modelCenterX - model.getSize() / 2 - 2,
+                    modelCenterY - model.getSize() / 2 - 2,
+                    modelCenterX + model.getSize(),
+                    modelCenterY + model.getSize(),
+                    0, 0, texture.getWidth(),
+                    texture.getHeight(),
+                    new Color(0, 0, 0, 0),
+                    null
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
-        drawRobot(g2d, controller.getRobotModel().getRobotDirection(), controller.getRobotModel().getSize());
+        draw(g2d, controller.getRobotModel(), ".\\robots\\src\\main\\resources\\objectTextures\\black-hole.png");
         for (TargetModel target : controller.getTargets()) {
-            drawTarget(g2d, round(target.getXCoordinate()),
-                    round(target.getYCoordinate()), target.getSize());
+            draw(g2d, target, ".\\robots\\src\\main\\resources\\objectTextures\\planet.png");
         }
     }
 }

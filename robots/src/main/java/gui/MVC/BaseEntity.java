@@ -1,6 +1,6 @@
 package gui.MVC;
 
-abstract public class Object {
+abstract public class BaseEntity {
     protected double xCoordinate;
     protected double yCoordinate;
 

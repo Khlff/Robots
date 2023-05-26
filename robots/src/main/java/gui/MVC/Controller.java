@@ -1,6 +1,7 @@
 package gui.MVC;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 public class Controller {
 
     private final RobotModel robotModel;
-    private final ArrayList<TargetModel> targets = new ArrayList<TargetModel>();
+    private final ArrayList<TargetModel> targets = new ArrayList<>();
     private final MouseModel mouseModel;
 
     public Controller(RobotModel robotModel, MouseModel mouseModel) {
@@ -36,11 +37,10 @@ public class Controller {
                 mouseModel.setYCoordinate(e.getY());
             }
         });
-
     }
 
     protected ArrayList<Double> distance() {
-        ArrayList<Double> distances = new ArrayList<Double>();
+        ArrayList<Double> distances = new ArrayList<>();
         for (TargetModel target: targets){
             double diffX = target.getXCoordinate() - this.robotModel.getXCoordinate();
             double diffY = target.getYCoordinate() - this.robotModel.getYCoordinate();

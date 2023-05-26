@@ -1,7 +1,7 @@
 package gui.MVC;
 
-abstract class Entity extends Object{
-    protected int size;
+abstract class GameEntity extends BaseEntity {
+    private int size;
     public int getSize(){
         return size;
     }

@@ -3,8 +3,10 @@ package gui.MVC;
 import java.util.ArrayList;
 
 import static gui.MVC.ModelsConstants.*;
+import static gui.windows.ConstantsGUI.GAME_WINDOW_HEIGHT;
+import static gui.windows.ConstantsGUI.GAME_WINDOW_WIDTH;
 
-public class RobotModel extends Entity {
+public class RobotModel extends GameEntity {
     private final ArrayList<Observer> observers;
     private double robotDirection = 0;
     private double robotVelocity = DEFAULT_ROBOT_VELOCITY;
@@ -62,28 +64,37 @@ public class RobotModel extends Entity {
         return angle;
     }
 
-    protected void moveRobot(double angularVelocity) {
+    protected void move(double angularVelocity) {
         this.robotVelocity = applyLimits(this.robotVelocity, 0, DEFAULT_ROBOT_VELOCITY);
         angularVelocity = applyLimits(angularVelocity, -DEFAULT_ROBOT_ANGULAR_VELOCITY, DEFAULT_ROBOT_ANGULAR_VELOCITY);
-        double newX = xCoordinate + this.robotVelocity / angularVelocity *
+        double rawX = xCoordinate + this.robotVelocity / angularVelocity *
                 (Math.sin(robotDirection + angularVelocity * robotSpeed) -
                         Math.sin(robotDirection));
-        if (!Double.isFinite(newX)) {
-            newX = xCoordinate + this.robotVelocity * robotSpeed * Math.cos(robotDirection);
+        if (!Double.isFinite(rawX)) {
+            rawX = xCoordinate + this.robotVelocity * robotSpeed * Math.cos(robotDirection);
         }
-        double newY = yCoordinate - this.robotVelocity / angularVelocity *
+        double rawY = yCoordinate - this.robotVelocity / angularVelocity *
                 (Math.cos(robotDirection + angularVelocity * robotSpeed) -
                         Math.cos(robotDirection));
-        if (!Double.isFinite(newY)) {
-            newY = yCoordinate + this.robotVelocity * robotSpeed * Math.sin(robotDirection);
+        if (!Double.isFinite(rawY)) {
+            rawY = yCoordinate + this.robotVelocity * robotSpeed * Math.sin(robotDirection);
         }
         robotDirection = asNormalizedRadians(robotDirection + angularVelocity * robotSpeed);
-        xCoordinate = newX;
-        yCoordinate = newY;
-        robotDirection = asNormalizedRadians(robotDirection + angularVelocity * robotSpeed);
 
+        if (rawX <= 0) {
+            rawX = Math.max(rawX, -getSize() / 2.0);
+        } else if (rawX >= GAME_WINDOW_WIDTH + getSize() / 2.0) {
+            rawX = Math.min(rawX, GAME_WINDOW_WIDTH + getSize() / 2.0);
+        }
+        if (rawY <= 0) {
+            rawY = Math.max(rawY, -getSize() / 2.0);
+        } else if (rawY >= GAME_WINDOW_HEIGHT + getSize() / 2.0) {
+            rawY = Math.min(rawY - getSize() / 2.0, GAME_WINDOW_HEIGHT + getSize() / 2.0);
+        }
+
+        xCoordinate = rawX;
+        yCoordinate = rawY;
+        robotDirection = asNormalizedRadians(robotDirection + angularVelocity * robotSpeed);
         notifyObservers();
     }
-
-
 }
