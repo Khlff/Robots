@@ -1,25 +1,72 @@
 package gui.MVC;
 
+import gui.Game;
+
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-public class Controller {
+import static gui.MVC.ModelsConstants.DEFAULT_ROBOT_ANGULAR_VELOCITY;
 
+public class Controller {
+    private final ArrayList<Observer> observers;
     private final RobotModel robotModel;
-    private final ArrayList<TargetModel> targets = new ArrayList<TargetModel>();
+    private ArrayList<TargetModel> targets = new ArrayList<TargetModel>();
     private final MouseModel mouseModel;
 
     public Controller(RobotModel robotModel, MouseModel mouseModel) {
+        observers = new ArrayList<>();
         this.robotModel = robotModel;
         this.mouseModel = mouseModel;
-        for (int i = 0; i < ModelsConstants.NUMBER_OF_POINTS;i++){
+        for (int i = 0; i < Game.getInstance().getNumberOfTargets(); i++){
             TargetModel target = new TargetModel();
             targets.add(target);
         }
     }
+    protected void onModelUpdateEvent() {
+        ArrayList<Double> distances = calculateDistance();
+        for (Double distance : distances) {
+            if (distance < (double) getRobotModel().getSize() / 2 && distance >
+                    (double) getRobotModel().getSize() / 2 - 1) {
+                Game.getInstance().setScoreOfGame();
+                notifyObservers();
+                if (distances.size() < 2) {
 
+                    getRobotModel().setSize(getRobotModel().getSize() + 10);
+                    generateNewTargets();
+                    setRobotSpeed(getRobotSpeed() - 0.5);
+                }
+                else {;
+                    getRobotModel().setSize(getRobotModel().getSize() + 10);
+                    deleteTarget(distances.indexOf(distance));
+                    setRobotSpeed(getRobotSpeed() - 0.5);
+                }
+            }
+            if (distance < 0.5) {
+                return;
+            }
+        }
+
+
+        double angleToTarget = angleTo();
+        double angularVelocity = 0;
+
+        if (RobotModel.asNormalizedRadians(getRobotModel().getRobotDirection() - angleToTarget) > Math.PI) {
+            angularVelocity = DEFAULT_ROBOT_ANGULAR_VELOCITY;
+        } else if (getRobotModel().getRobotDirection() != angleToTarget) {
+            angularVelocity = -DEFAULT_ROBOT_ANGULAR_VELOCITY;
+        }
+
+        getRobotModel().moveRobot(angularVelocity);
+    }
+    public void generateNewTargets(){
+        Game.getInstance().resetTargets();
+        for (int i = 0; i < Game.getInstance().getNumberOfTargets(); i++){
+            TargetModel target = new TargetModel();
+            targets.add(target);
+        }
+    }
     public RobotModel getRobotModel() {
         return robotModel;
     }
@@ -39,7 +86,7 @@ public class Controller {
 
     }
 
-    protected ArrayList<Double> distance() {
+    public ArrayList<Double> calculateDistance() {
         ArrayList<Double> distances = new ArrayList<Double>();
         for (TargetModel target: targets){
             double diffX = target.getXCoordinate() - this.robotModel.getXCoordinate();
@@ -47,6 +94,9 @@ public class Controller {
             distances.add(Math.sqrt(diffX * diffX + diffY * diffY));
         }
         return distances;
+    }
+    public void deleteTarget(int index){
+        targets.remove(index);
     }
 
     protected double angleTo() {
@@ -68,6 +118,15 @@ public class Controller {
 
     protected double getRobotSpeed() {
         return this.robotModel.getRobotSpeed();
+    }
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update();
+        }
     }
 }
 

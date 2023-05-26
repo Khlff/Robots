@@ -1,23 +1,27 @@
 package gui.MVC;
 
+import gui.Game;
+
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static gui.MVC.ModelsConstants.*;
 
-public class RobotView extends JPanel {
+public class RobotView extends JPanel implements Observer {
     Controller controller;
+    JLabel score = new JLabel();
 
     private static Timer initTimer() {
         return new Timer("events generator", true);
     }
 
     public RobotView(Controller controller) {
+        add(score);
+        controller.addObserver(this);
+        score.setText(String.valueOf(Game.getInstance().getScoreOfGame()));
         this.controller = controller;
         Timer m_timer = initTimer();
         m_timer.schedule(new TimerTask() {
@@ -29,7 +33,7 @@ public class RobotView extends JPanel {
         m_timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                onModelUpdateEvent();
+                controller.onModelUpdateEvent();
             }
         }, 0, 10);
     }
@@ -38,31 +42,6 @@ public class RobotView extends JPanel {
         EventQueue.invokeLater(this::repaint);
     }
 
-    protected void onModelUpdateEvent() {
-        ArrayList<Double> distances = controller.distance();
-        for (Double distance : distances) {
-            if (distance < (double) controller.getRobotModel().getSize() / 2 && distance > (double) controller.getRobotModel().getSize() / 2 - 1) {
-                controller.getRobotModel().setSize(controller.getRobotModel().getSize() + 10);
-                controller.generateNewTargetCoordinates(distances.indexOf(distance));
-                controller.setRobotSpeed(controller.getRobotSpeed() - 0.5);
-            }
-            if (distance < 0.5) {
-                return;
-            }
-        }
-
-
-        double angleToTarget = controller.angleTo();
-        double angularVelocity = 0;
-
-        if (RobotModel.asNormalizedRadians(controller.getRobotModel().getRobotDirection() - angleToTarget) > Math.PI) {
-            angularVelocity = DEFAULT_ROBOT_ANGULAR_VELOCITY;
-        } else if (controller.getRobotModel().getRobotDirection() != angleToTarget) {
-            angularVelocity = -DEFAULT_ROBOT_ANGULAR_VELOCITY;
-        }
-
-        controller.getRobotModel().moveRobot(angularVelocity);
-    }
 
     private static void fillOval(Graphics g, int centerX, int centerY, int diam1, int diam2) {
         g.fillOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
@@ -105,5 +84,10 @@ public class RobotView extends JPanel {
             drawTarget(g2d, round(target.getXCoordinate()),
                     round(target.getYCoordinate()), target.getSize());
         }
+    }
+
+    @Override
+    public void update() {
+        score.setText(String.valueOf(Game.getInstance().getScoreOfGame()));
     }
 }
