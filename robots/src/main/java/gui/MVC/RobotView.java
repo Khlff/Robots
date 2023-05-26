@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 import static gui.MVC.ModelsConstants.*;
 
 public class RobotView extends JPanel {
@@ -39,12 +40,16 @@ public class RobotView extends JPanel {
     }
 
     protected void onModelUpdateEvent() {
-        ArrayList<Double> distances = controller.distance();
+        ArrayList<Double> distances = controller.distanceToTarget();
+        double distanceToSpike = controller.distanceToSpike();
         for (Double distance : distances) {
             if (distance < (double) controller.getRobotModel().getSize() / 2 && distance > (double) controller.getRobotModel().getSize() / 2 - 1) {
                 controller.getRobotModel().setSize(controller.getRobotModel().getSize() + 10);
                 controller.generateNewTargetCoordinates(distances.indexOf(distance));
                 controller.setRobotSpeed(controller.getRobotSpeed() - 0.5);
+            }
+            if (distanceToSpike < DEFAULT_SPIKE_SIZE / 2){
+                System.exit(0);
             }
             if (distance < 0.5) {
                 return;
@@ -92,6 +97,15 @@ public class RobotView extends JPanel {
         drawOval(g, x, y, targetSize, targetSize);
     }
 
+    private void drawSpike(Graphics2D g, int x, int y, int targetSize){
+        AffineTransform t = AffineTransform.getRotateInstance(0, 0, 0);
+        g.setTransform(t);
+        g.setColor(Color.GREEN);
+        fillOval(g, x, y, targetSize, targetSize);
+        g.setColor(Color.BLACK);
+        drawOval(g, x, y, targetSize, targetSize);
+    }
+
     protected static int round(double value) {
         return (int) (value + 0.5);
     }
@@ -105,5 +119,7 @@ public class RobotView extends JPanel {
             drawTarget(g2d, round(target.getXCoordinate()),
                     round(target.getYCoordinate()), target.getSize());
         }
+        drawSpike(g2d, round(controller.getSpikeModel().getXCoordinate()),
+                round(controller.getSpikeModel().getYCoordinate()), controller.getSpikeModel().getSize());
     }
 }

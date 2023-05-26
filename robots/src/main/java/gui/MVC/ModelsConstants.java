@@ -11,5 +11,7 @@ public class ModelsConstants {
     public static final int DEFAULT_ROBOT_SIZE = 30;
     public static final int DEFAULT_TARGET_SIZE = 5;
 
+    public static final int DEFAULT_SPIKE_SIZE = 100;
+
 
 }

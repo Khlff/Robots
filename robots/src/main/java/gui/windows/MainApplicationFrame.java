@@ -1,15 +1,14 @@
 package gui.windows;
 
-import gui.MVC.Controller;
-import gui.MVC.MouseModel;
-import gui.MVC.RobotModel;
-import gui.MVC.TargetModel;
+import gui.MVC.*;
 import log.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Locale;
+
+
 
 import static gui.windows.ConstantsGUI.*;
 
@@ -34,8 +33,9 @@ public class MainApplicationFrame extends JFrame {
 
         RobotModel robotModel = new RobotModel();
         TargetModel targetModel = new TargetModel();
+        SpikeModel spikeModel = new SpikeModel();
         MouseModel mouseModel = new MouseModel();
-        Controller controller = new Controller(robotModel, mouseModel);
+        Controller controller = new Controller(robotModel, mouseModel, spikeModel);
         GameWindow gameWindow = new GameWindow(controller);
         gameWindow.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
         gameWindow.setLocation(screenSize.width / 4, screenSize.height / 10);

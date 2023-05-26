@@ -8,12 +8,14 @@ import java.util.ArrayList;
 public class Controller {
 
     private final RobotModel robotModel;
+    private final SpikeModel spikeModel;
     private final ArrayList<TargetModel> targets = new ArrayList<TargetModel>();
     private final MouseModel mouseModel;
 
-    public Controller(RobotModel robotModel, MouseModel mouseModel) {
+    public Controller(RobotModel robotModel, MouseModel mouseModel, SpikeModel spikeModel) {
         this.robotModel = robotModel;
         this.mouseModel = mouseModel;
+        this.spikeModel = spikeModel;
         for (int i = 0; i < ModelsConstants.NUMBER_OF_POINTS;i++){
             TargetModel target = new TargetModel();
             targets.add(target);
@@ -28,6 +30,10 @@ public class Controller {
         return targets;
     }
 
+    public SpikeModel getSpikeModel(){
+        return spikeModel;
+    }
+
     public void addMouseListener(JPanel panel) {
         panel.addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -39,7 +45,7 @@ public class Controller {
 
     }
 
-    protected ArrayList<Double> distance() {
+    protected ArrayList<Double> distanceToTarget() {
         ArrayList<Double> distances = new ArrayList<Double>();
         for (TargetModel target: targets){
             double diffX = target.getXCoordinate() - this.robotModel.getXCoordinate();
@@ -47,6 +53,12 @@ public class Controller {
             distances.add(Math.sqrt(diffX * diffX + diffY * diffY));
         }
         return distances;
+    }
+
+    protected double distanceToSpike(){
+        double diffX = this.spikeModel.getXCoordinate() - this.robotModel.getXCoordinate();
+        double diffY = this.spikeModel.getYCoordinate() - this.robotModel.getYCoordinate();
+        return (Math.sqrt(diffX * diffX + diffY * diffY));
     }
 
     protected double angleTo() {

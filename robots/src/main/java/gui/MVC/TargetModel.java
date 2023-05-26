@@ -8,22 +8,11 @@ import static gui.windows.ConstantsGUI.GAME_WINDOW_HEIGHT;
 import static gui.windows.ConstantsGUI.GAME_WINDOW_WIDTH;
 
 public class TargetModel extends Entity {
-    private final ArrayList<Observer> observers;
 
 
     public TargetModel() {
         generateNewCoordinates();
         setSize(DEFAULT_TARGET_SIZE);
-        observers = new ArrayList<>();
-    }
-
-    public void addObserver(Observer observer) {
-        observers.add(observer);
-    }
-
-    public void setTargetPosition(Point p) {
-        setXCoordinate(p.x);
-        setYCoordinate(p.y);
     }
 
     public void generateNewCoordinates() {
@@ -31,10 +20,5 @@ public class TargetModel extends Entity {
         setYCoordinate((int) (Math.random() * GAME_WINDOW_HEIGHT));
     }
 
-    public void notifyObservers() {
-        for (Observer observer : observers) {
-            observer.update();
-        }
-    }
 
 }
