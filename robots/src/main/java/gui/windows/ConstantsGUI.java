@@ -3,6 +3,8 @@ package gui.windows;
 public class ConstantsGUI {
     public static final int GAME_WINDOW_WIDTH = 1200;
     public static final int GAME_WINDOW_HEIGHT = 720;
+    public static final int SCREEN_OFFSET = 50;
+
 
     public static final int LOG_WINDOW_LOC_X = 10;
     public static final int LOG_WINDOW_LOC_Y = 10;

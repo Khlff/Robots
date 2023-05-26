@@ -3,35 +3,36 @@ package gui.MVC;
 import javax.swing.*;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.awt.event.KeyEvent;
 
-import static gui.MVC.ModelsConstants.*;
+import static gui.MVC.Controller.initTimer;
+import static gui.windows.ConstantsGUI.GAME_WINDOW_HEIGHT;
+import static gui.windows.ConstantsGUI.GAME_WINDOW_WIDTH;
 
-public class RobotView extends JPanel {
+public class View extends JPanel {
     Controller controller;
 
-    private static Timer initTimer() {
-        return new Timer("events generator", true);
-    }
-
-    public RobotView(Controller controller) {
+    public View(Controller controller) {
         this.controller = controller;
-        Timer m_timer = initTimer();
-        m_timer.schedule(new TimerTask() {
+        Timer viewTimer = initTimer();
+        viewTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 onRedrawEvent();
             }
-        }, 0, 50);
-        m_timer.schedule(new TimerTask() {
+        }, 0, 5);
+        viewTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 onModelUpdateEvent();
             }
-        }, 0, 10);
+        }, 0, 5);
     }
 
     protected void onRedrawEvent() {
@@ -39,29 +40,16 @@ public class RobotView extends JPanel {
     }
 
     protected void onModelUpdateEvent() {
-        ArrayList<Double> distances = controller.distance();
+        ArrayList<Double> distances = controller.calculateDistance();
         for (Double distance : distances) {
-            if (distance < (double) controller.getRobotModel().getSize() / 2 && distance > (double) controller.getRobotModel().getSize() / 2 - 1) {
+            if (distance <= (double) controller.getRobotModel().getSize() / 2) {
                 controller.getRobotModel().setSize(controller.getRobotModel().getSize() + 10);
                 controller.generateNewTargetCoordinates(distances.indexOf(distance));
-                controller.setRobotSpeed(controller.getRobotSpeed() - 0.5);
             }
             if (distance < 0.5) {
                 return;
             }
         }
-
-
-        double angleToTarget = controller.angleTo();
-        double angularVelocity = 0;
-
-        if (RobotModel.asNormalizedRadians(controller.getRobotModel().getRobotDirection() - angleToTarget) > Math.PI) {
-            angularVelocity = DEFAULT_ROBOT_ANGULAR_VELOCITY;
-        } else if (controller.getRobotModel().getRobotDirection() != angleToTarget) {
-            angularVelocity = -DEFAULT_ROBOT_ANGULAR_VELOCITY;
-        }
-
-        controller.getRobotModel().moveRobot(angularVelocity);
     }
 
     private static void fillOval(Graphics g, int centerX, int centerY, int diam1, int diam2) {
@@ -72,11 +60,9 @@ public class RobotView extends JPanel {
         g.drawOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
     }
 
-    private void drawRobot(Graphics2D g, double direction, int robotSize) {
+    private void drawRobot(Graphics2D g, int robotSize) {
         int robotCenterX = (int) controller.getRobotModel().getXCoordinate();
         int robotCenterY = (int) controller.getRobotModel().getYCoordinate();
-        AffineTransform t = AffineTransform.getRotateInstance(direction, robotCenterX, robotCenterY);
-        g.setTransform(t);
         g.setColor(Color.MAGENTA);
         fillOval(g, robotCenterX, robotCenterY, robotSize, robotSize);
         g.setColor(Color.BLACK);
@@ -84,8 +70,6 @@ public class RobotView extends JPanel {
     }
 
     private void drawTarget(Graphics2D g, int x, int y, int targetSize) {
-        AffineTransform t = AffineTransform.getRotateInstance(0, 0, 0);
-        g.setTransform(t);
         g.setColor(Color.GREEN);
         fillOval(g, x, y, targetSize, targetSize);
         g.setColor(Color.BLACK);
@@ -100,7 +84,7 @@ public class RobotView extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
-        drawRobot(g2d, controller.getRobotModel().getRobotDirection(), controller.getRobotModel().getSize());
+        drawRobot(g2d, controller.getRobotModel().getSize());
         for (TargetModel target : controller.getTargets()) {
             drawTarget(g2d, round(target.getXCoordinate()),
                     round(target.getYCoordinate()), target.getSize());

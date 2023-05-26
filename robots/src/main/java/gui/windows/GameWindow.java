@@ -1,7 +1,7 @@
 package gui.windows;
 
 import gui.MVC.Controller;
-import gui.MVC.RobotView;
+import gui.MVC.View;
 
 import java.awt.BorderLayout;
 
@@ -13,12 +13,14 @@ public class GameWindow extends JInternalFrame
     Controller controller;
     public GameWindow(Controller controller)
 {
-    super("Игровое поле", true, true, true, true);
+    super("Игровое поле", false, false, false, false);
     this.controller = controller;
-    RobotView robotView = new RobotView(this.controller);
+    View view = new View(this.controller);
     JPanel panel = new JPanel(new BorderLayout());
-    controller.addMouseListener(panel);
-    panel.add(robotView, BorderLayout.CENTER);
+    panel.setFocusable(true);
+    panel.requestFocusInWindow();
+    controller.addKeyListener(panel);
+    panel.add(view, BorderLayout.CENTER);
     getContentPane().add(panel);
     pack();
 }
