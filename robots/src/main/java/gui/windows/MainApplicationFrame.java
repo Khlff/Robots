@@ -1,6 +1,8 @@
 package gui.windows;
 
 import gui.MVC.*;
+import gui.MVC.Controller;
+import gui.MVC.RobotModel;
 import log.Logger;
 
 import javax.swing.*;
@@ -17,11 +19,10 @@ public class MainApplicationFrame extends JFrame {
     private final JDesktopPane desktopPane = new JDesktopPane();
 
     public MainApplicationFrame() {
-        int inset = 50;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(inset, inset,
-                screenSize.width - inset * 2,
-                screenSize.height - inset * 2);
+        setBounds(SCREEN_OFFSET, SCREEN_OFFSET,
+                screenSize.width - SCREEN_OFFSET * 2,
+                screenSize.height - SCREEN_OFFSET * 2);
 
         setContentPane(desktopPane);
 
@@ -32,11 +33,10 @@ public class MainApplicationFrame extends JFrame {
         LogWindow logWindow = createLogWindow();
 
         RobotModel robotModel = new RobotModel();
-        TargetModel targetModel = new TargetModel();
         SpikeModel spikeModel = new SpikeModel();
-        MouseModel mouseModel = new MouseModel();
-        Controller controller = new Controller(robotModel, mouseModel, spikeModel);
+        Controller controller = new Controller(robotModel, spikeModel);
         GameWindow gameWindow = new GameWindow(controller);
+        gameWindow.setResizable(false);
         gameWindow.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
         gameWindow.setLocation(screenSize.width / 4, screenSize.height / 10);
 

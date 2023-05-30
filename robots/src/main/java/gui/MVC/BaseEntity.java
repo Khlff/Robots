@@ -1,14 +1,14 @@
 package gui.MVC;
 
-abstract public class Object {
+abstract public class BaseEntity {
     protected double xCoordinate;
     protected double yCoordinate;
 
-    public void setXCoordinate(int xCoordinate) {
+    public void setXCoordinate(double xCoordinate) {
         this.xCoordinate = xCoordinate;
     }
 
-    public void setYCoordinate(int yCoordinate) {
+    public void setYCoordinate(double yCoordinate) {
         this.yCoordinate = yCoordinate;
     }
 

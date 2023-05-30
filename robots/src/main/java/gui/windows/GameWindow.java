@@ -1,25 +1,25 @@
 package gui.windows;
 
 import gui.MVC.Controller;
-import gui.MVC.RobotView;
+import gui.MVC.View;
 
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-
-public class GameWindow extends JInternalFrame
-{
+public class GameWindow extends JInternalFrame {
     Controller controller;
-    public GameWindow(Controller controller)
-{
-    super("Игровое поле", true, true, true, true);
-    this.controller = controller;
-    RobotView robotView = new RobotView(this.controller);
-    JPanel panel = new JPanel(new BorderLayout());
-    controller.addMouseListener(panel);
-    panel.add(robotView, BorderLayout.CENTER);
-    getContentPane().add(panel);
-    pack();
-}
+
+    public GameWindow(Controller controller) {
+        super("Игровое поле", false, true, false, false);
+        this.controller = controller;
+        View view = new View(this.controller);
+        ImagePanel panel = new ImagePanel(".\\robots\\src\\main\\resources\\objectTextures\\space.jpg");
+        controller.addKeyListener(panel);
+        setLayout(new BorderLayout());
+        panel.setFocusable(true);
+        panel.requestFocusInWindow();
+        panel.add(view, BorderLayout.CENTER);
+        getContentPane().add(panel);
+        pack();
+    }
 }

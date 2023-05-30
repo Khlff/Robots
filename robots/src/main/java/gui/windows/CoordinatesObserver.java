@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class CoordinatesObserver extends JPanel implements Observer {
-    private Controller controller;
+    private final Controller controller;
     JPanel coordinatesPanel = new JPanel(new BorderLayout());
     JLabel xLabel = new JLabel();
     JLabel yLabel = new JLabel();
