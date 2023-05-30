@@ -32,6 +32,7 @@ public class MainApplicationFrame extends JFrame {
         RobotModel robotModel = new RobotModel();
         Controller controller = new Controller(robotModel);
         GameWindow gameWindow = new GameWindow(controller);
+        gameWindow.setResizable(false);
         gameWindow.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
         gameWindow.setLocation(screenSize.width / 4, screenSize.height / 10);
 

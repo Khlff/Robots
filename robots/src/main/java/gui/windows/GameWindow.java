@@ -7,21 +7,20 @@ import java.awt.BorderLayout;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
+import javax.swing.*;
 
-public class GameWindow extends JInternalFrame
-{
+public class GameWindow extends JInternalFrame {
     Controller controller;
-    public GameWindow(Controller controller)
-{
-    super("Игровое поле", false, false, false, false);
-    this.controller = controller;
-    View view = new View(this.controller);
-    JPanel panel = new JPanel(new BorderLayout());
-    panel.setFocusable(true);
-    panel.requestFocusInWindow();
-    controller.addKeyListener(panel);
-    panel.add(view, BorderLayout.CENTER);
-    getContentPane().add(panel);
-    pack();
-}
+
+    public GameWindow(Controller controller) {
+        super("Игровое поле", false, true, false, false);
+        this.controller = controller;
+        View view = new View(this.controller);
+        ImagePanel panel = new ImagePanel(".\\robots\\src\\main\\resources\\objectTextures\\space.jpg");
+        controller.addKeyListener(panel);
+        setLayout(new BorderLayout());
+        panel.add(view, BorderLayout.CENTER);
+        getContentPane().add(panel);
+        pack();
+    }
 }

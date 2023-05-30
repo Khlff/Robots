@@ -159,6 +159,4 @@ public class RobotModel extends GameEntity {
         }
         notifyObservers();
     }
-
-
 }

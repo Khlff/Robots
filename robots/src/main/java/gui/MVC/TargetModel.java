@@ -1,7 +1,5 @@
 package gui.MVC;
 
-import java.awt.*;
-import java.util.ArrayList;
 
 import static gui.MVC.ModelsConstants.DEFAULT_TARGET_SIZE;
 import static gui.windows.ConstantsGUI.GAME_WINDOW_HEIGHT;
@@ -21,16 +19,8 @@ public class TargetModel extends GameEntity {
         observers.add(observer);
     }
 
-
     public void generateNewCoordinates() {
         setXCoordinate((int) (Math.random() * GAME_WINDOW_WIDTH));
         setYCoordinate((int) (Math.random() * GAME_WINDOW_HEIGHT));
     }
-
-    public void notifyObservers() {
-        for (Observer observer : observers) {
-            observer.update();
-        }
-    }
-
 }

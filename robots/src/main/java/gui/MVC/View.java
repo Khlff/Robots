@@ -1,11 +1,15 @@
 package gui.MVC;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -52,42 +56,48 @@ public class View extends JPanel {
         }
     }
 
-    private static void fillOval(Graphics g, int centerX, int centerY, int diam1, int diam2) {
-        g.fillOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
-    }
 
-    private static void drawOval(Graphics g, int centerX, int centerY, int diam1, int diam2) {
-        g.drawOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
-    }
+    /**
+     * Функция, которая отвечает за отрисовку текстуры модели.
+     *
+     * @param model       модель, у которой отрисовываем
+     * @param texturePath путь, к текстуре
+     */
+    private void draw(Graphics2D g, GameEntity model, String texturePath) {
+        int modelCenterX = (int) model.getXCoordinate();
+        int modelCenterY = (int) model.getYCoordinate();
 
-    private void drawRobot(Graphics2D g, int robotSize) {
-        int robotCenterX = (int) controller.getRobotModel().getXCoordinate();
-        int robotCenterY = (int) controller.getRobotModel().getYCoordinate();
-        g.setColor(Color.MAGENTA);
-        fillOval(g, robotCenterX, robotCenterY, robotSize, robotSize);
-        g.setColor(Color.BLACK);
-        drawOval(g, robotCenterX, robotCenterY, robotSize, robotSize);
-    }
-
-    private void drawTarget(Graphics2D g, int x, int y, int targetSize) {
-        g.setColor(Color.GREEN);
-        fillOval(g, x, y, targetSize, targetSize);
-        g.setColor(Color.BLACK);
-        drawOval(g, x, y, targetSize, targetSize);
-    }
-
-    protected static int round(double value) {
-        return (int) (value + 0.5);
+        BufferedImage texture;
+        try {
+            texture = ImageIO.read(new File(texturePath));
+            g.drawOval(
+                    modelCenterX - model.getSize() / 2,
+                    modelCenterY - model.getSize() / 2,
+                    model.getSize(), model.getSize()
+            );
+            g.drawImage(
+                    texture,
+                    modelCenterX - model.getSize() / 2 - 2,
+                    modelCenterY - model.getSize() / 2 - 2,
+                    modelCenterX + model.getSize(),
+                    modelCenterY + model.getSize(),
+                    0, 0, texture.getWidth(),
+                    texture.getHeight(),
+                    new Color(0, 0, 0, 0),
+                    null
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
-        drawRobot(g2d, controller.getRobotModel().getSize());
+        draw(g2d, controller.getRobotModel(), ".\\robots\\src\\main\\resources\\objectTextures\\black-hole.png");
         for (TargetModel target : controller.getTargets()) {
-            drawTarget(g2d, round(target.getXCoordinate()),
-                    round(target.getYCoordinate()), target.getSize());
+            draw(g2d, target, ".\\robots\\src\\main\\resources\\objectTextures\\planet.png");
         }
     }
 }
