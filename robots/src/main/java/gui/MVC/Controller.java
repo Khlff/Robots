@@ -54,9 +54,20 @@ public class Controller {
 
     /**
      * Генерирует новые координаты таргету
+     *
+     * @param index индекс таргета в массиве таргетов
      */
     protected void generateNewTargetCoordinates(int index) {
         this.targets.get(index).generateNewCoordinates();
+    }
+
+    /**
+     * Генерирует путь к новой текстуре таргету
+     *
+     * @param index индекс таргета в массиве таргетов
+     */
+    protected void generateNewTargetTexture(int index) {
+        this.targets.get(index).generateNewTexturePath();
     }
 
 

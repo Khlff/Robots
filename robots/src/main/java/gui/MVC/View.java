@@ -2,22 +2,15 @@ package gui.MVC;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.awt.event.KeyEvent;
 
 import static gui.MVC.Controller.initTimer;
-import static gui.windows.ConstantsGUI.GAME_WINDOW_HEIGHT;
-import static gui.windows.ConstantsGUI.GAME_WINDOW_WIDTH;
 
 public class View extends JPanel {
     Controller controller;
@@ -49,6 +42,7 @@ public class View extends JPanel {
             if (distance <= (double) controller.getRobotModel().getSize() / 2) {
                 controller.getRobotModel().setSize(controller.getRobotModel().getSize() + 10);
                 controller.generateNewTargetCoordinates(distances.indexOf(distance));
+                controller.generateNewTargetTexture(distances.indexOf(distance));
             }
             if (distance < 0.5) {
                 return;
@@ -77,10 +71,10 @@ public class View extends JPanel {
             );
             g.drawImage(
                     texture,
-                    modelCenterX - model.getSize() / 2 - 2,
-                    modelCenterY - model.getSize() / 2 - 2,
-                    modelCenterX + model.getSize(),
-                    modelCenterY + model.getSize(),
+                    modelCenterX - model.getSize() / 2,
+                    modelCenterY - model.getSize() / 2,
+                    modelCenterX + model.getSize() / 2,
+                    modelCenterY + model.getSize() / 2,
                     0, 0, texture.getWidth(),
                     texture.getHeight(),
                     new Color(0, 0, 0, 0),
@@ -91,13 +85,18 @@ public class View extends JPanel {
         }
     }
 
+    /**
+     * Функция отрисовки всех объектов
+     *
+     * @param g the <code>Graphics</code> context in which to paint
+     */
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
-        draw(g2d, controller.getRobotModel(), ".\\robots\\src\\main\\resources\\objectTextures\\black-hole.png");
+        draw(g2d, controller.getRobotModel(), controller.getRobotModel().texturePath);
         for (TargetModel target : controller.getTargets()) {
-            draw(g2d, target, ".\\robots\\src\\main\\resources\\objectTextures\\planet.png");
+            draw(g2d, target, target.texturePath);
         }
     }
 }

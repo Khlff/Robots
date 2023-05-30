@@ -3,11 +3,8 @@ package gui.windows;
 import gui.MVC.Controller;
 import gui.MVC.View;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
 import javax.swing.*;
+import java.awt.*;
 
 public class GameWindow extends JInternalFrame {
     Controller controller;
@@ -19,6 +16,8 @@ public class GameWindow extends JInternalFrame {
         ImagePanel panel = new ImagePanel(".\\robots\\src\\main\\resources\\objectTextures\\space.jpg");
         controller.addKeyListener(panel);
         setLayout(new BorderLayout());
+        panel.setFocusable(true);
+        panel.requestFocusInWindow();
         panel.add(view, BorderLayout.CENTER);
         getContentPane().add(panel);
         pack();

@@ -10,6 +10,7 @@ import static java.lang.Math.sqrt;
 public class RobotModel extends GameEntity {
     private final ArrayList<Observer> observers;
     private final int robotSpeed = DEFAULT_ROBOT_SPEED;
+    public final String texturePath = ".\\robots\\src\\main\\resources\\objectTextures\\black-hole.png";
 
     private enum Direction {
         UP_LEFT, UP, UP_RIGHT, LEFT, RIGHT, DOWN_LEFT, DOWN, DOWN_RIGHT
@@ -38,6 +39,9 @@ public class RobotModel extends GameEntity {
         }
     }
 
+    /**
+     * Установить направление движения вверх.
+     */
     protected void setMovementUp() {
         if (getYCoordinate() - robotSpeed >= 0) {
             currentDirection = Direction.UP;
@@ -45,7 +49,7 @@ public class RobotModel extends GameEntity {
     }
 
     /**
-     * Установить направление движения вниз
+     * Установить направление движения вниз.
      */
     protected void setMovementDown() {
         if (getYCoordinate() + robotSpeed <= GAME_WINDOW_HEIGHT) {
@@ -54,7 +58,7 @@ public class RobotModel extends GameEntity {
     }
 
     /**
-     * Установить направление движения влево
+     * Установить направление движения влево.
      */
     protected void setMovementLeft() {
         if (getXCoordinate() - robotSpeed >= 0) {
@@ -63,7 +67,7 @@ public class RobotModel extends GameEntity {
     }
 
     /**
-     * Установить направление движения вправо
+     * Установить направление движения вправо.
      */
     protected void setMovementRight() {
         if (getXCoordinate() + robotSpeed <= GAME_WINDOW_WIDTH) {
@@ -72,7 +76,7 @@ public class RobotModel extends GameEntity {
     }
 
     /**
-     * Установить направление движения по диагонали вверх влево
+     * Установить направление движения по диагонали вверх влево.
      */
     protected void setMovementUpLeft() {
         if (getXCoordinate() - robotSpeed >= 0 && getYCoordinate() - robotSpeed >= 0) {
@@ -81,7 +85,7 @@ public class RobotModel extends GameEntity {
     }
 
     /**
-     * Установить направление движения по диагонали вверх вправо
+     * Установить направление движения по диагонали вверх вправо.
      */
     protected void setMovementUpRight() {
         if (getXCoordinate() + robotSpeed <= GAME_WINDOW_WIDTH && getYCoordinate() - robotSpeed >= 0) {
@@ -90,7 +94,7 @@ public class RobotModel extends GameEntity {
     }
 
     /**
-     * Установить направление движения по диагонали вниз влево
+     * Установить направление движения по диагонали вниз влево.
      */
     protected void setMovementDownLeft() {
         if (getYCoordinate() + robotSpeed <= GAME_WINDOW_HEIGHT && getXCoordinate() - robotSpeed >= 0) {
@@ -99,7 +103,7 @@ public class RobotModel extends GameEntity {
     }
 
     /**
-     * Установить направление движения по диагонали вниз вправо
+     * Установить направление движения по диагонали вниз вправо.
      */
     protected void setMovementDownRight() {
         if (getYCoordinate() + robotSpeed <= GAME_WINDOW_HEIGHT && getXCoordinate() + robotSpeed <= GAME_WINDOW_WIDTH) {
@@ -108,7 +112,7 @@ public class RobotModel extends GameEntity {
     }
 
     /**
-     * Двигает робота по установленному направлению
+     * Двигает робота по установленному направлению.
      */
     protected void move() {
         switch (currentDirection) {
