@@ -1,6 +1,5 @@
 package gui;
 
-import java.util.Random;
 
 public class Game {
     private static Game instance;
@@ -10,14 +9,14 @@ public class Game {
 
     private Game() {
         resetTargets();
-        this.numberOfSpikes = (int) (Math.random() * 3) + 1;
+        this.numberOfSpikes = (int) (Math.random() * 5) + 1;
     }
 
     public int getScoreOfGame() {
         return scoreOfGame;
     }
 
-    public void setScoreOfGame() {
+    public void addScoreOfGame() {
         scoreOfGame += 1;
     }
 

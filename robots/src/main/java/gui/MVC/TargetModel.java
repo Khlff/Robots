@@ -14,17 +14,8 @@ public class TargetModel extends GameEntity {
         generateNewCoordinates();
         generateNewTexturePath();
         setSize(DEFAULT_TARGET_SIZE);
-        observers = new ArrayList<>();
     }
 
-    public void addObserver(Observer observer) {
-        observers.add(observer);
-    }
-
-    public void setTargetPosition(Point p) {
-        setXCoordinate(p.x);
-        setYCoordinate(p.y);
-    }
 
     /**
      * Генерирует таргету новые координаты
