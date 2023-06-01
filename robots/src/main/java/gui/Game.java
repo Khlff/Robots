@@ -1,15 +1,19 @@
 package gui;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import gui.MVC.TargetModel;
+
+import java.util.ArrayList;
 
 public class Game {
     private static Game instance;
     private int numberOfTargets;
-    private final int numberOfSpikes;
     private int scoreOfGame = 0;
-
+    private final ArrayList<TargetModel> targets = new ArrayList<>();
     private Game() {
         resetTargets();
-        this.numberOfSpikes = (int) (Math.random() * 5) + 1;
     }
 
     public int getScoreOfGame() {
@@ -23,10 +27,7 @@ public class Game {
     public int getNumberOfTargets() {
         return numberOfTargets;
     }
-
-    public int getNumberOfSpikes() {
-        return numberOfSpikes;
-    }
+    public ArrayList<TargetModel> getTargets() {return targets;}
 
     public static Game getInstance() {
         if (instance == null) {

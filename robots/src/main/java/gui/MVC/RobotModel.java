@@ -10,7 +10,7 @@ import static java.lang.Math.sqrt;
 public class RobotModel extends GameEntity {
     private final ArrayList<Observer> observers;
     private final int robotSpeed = DEFAULT_ROBOT_SPEED;
-    public final String texturePath = ".\\robots\\src\\main\\resources\\objectTextures\\black-hole.png";
+    public final String texturePath = "./robots/src/main/resources/objectTextures/black-hole.png";
 
     private enum Direction {
         UP_LEFT, UP, UP_RIGHT, LEFT, RIGHT, DOWN_LEFT, DOWN, DOWN_RIGHT

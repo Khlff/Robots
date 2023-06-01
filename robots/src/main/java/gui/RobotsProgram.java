@@ -22,7 +22,7 @@ public class RobotsProgram
         MainApplicationFrame frame = new MainApplicationFrame();
 
         frame.pack();
-        frame.setResizable(false);
+//        frame.setResizable(false);
         frame.setVisible(true);
         frame.setExtendedState(Frame.MAXIMIZED_BOTH);
       });

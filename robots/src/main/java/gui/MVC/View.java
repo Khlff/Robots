@@ -51,6 +51,7 @@ public class View extends JPanel {
                 controller.getRobotModel().setSize(controller.getRobotModel().getSize() + 10);
                 controller.generateNewTargetCoordinates(distances.indexOf(distance));
                 controller.generateNewTargetTexture(distances.indexOf(distance));
+                controller.generateNewSpikeCoordinates();
                 Game.getInstance().addScoreOfGame();
                 score.setText(String.valueOf(Game.getInstance().getScoreOfGame()));
             }
@@ -118,7 +119,7 @@ public class View extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
         draw(g2d, controller.getRobotModel(), controller.getRobotModel().texturePath);
         draw(g2d, controller.getSpikeModel(), controller.getSpikeModel().texturePath);
-        for (TargetModel target : controller.getTargets()) {
+        for (TargetModel target : Game.getInstance().getTargets()) {
             draw(g2d, target, target.texturePath);
         }
     }

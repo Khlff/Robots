@@ -11,7 +11,6 @@ import java.awt.event.KeyEvent;
 import java.util.Locale;
 
 
-
 import static gui.windows.ConstantsGUI.*;
 
 
@@ -36,7 +35,6 @@ public class MainApplicationFrame extends JFrame {
         SpikeModel spikeModel = new SpikeModel();
         Controller controller = new Controller(robotModel, spikeModel);
         GameWindow gameWindow = new GameWindow(controller);
-        gameWindow.setResizable(false);
         gameWindow.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
         gameWindow.setLocation(screenSize.width / 4, screenSize.height / 10);
 

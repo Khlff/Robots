@@ -10,7 +10,7 @@ import java.util.TimerTask;
 public class Controller {
     private final RobotModel robotModel;
     private final SpikeModel spikeModel;
-    private final ArrayList<TargetModel> targets = new ArrayList<>();
+//    private final ArrayList<TargetModel> targets = new ArrayList<>();
 
 
     protected static Timer initTimer() {
@@ -30,16 +30,12 @@ public class Controller {
 
         for (int i = 0; i < Game.getInstance().getNumberOfTargets(); i++) {
             TargetModel target = new TargetModel();
-            targets.add(target);
+            Game.getInstance().getTargets().add(target);
         }
     }
 
     public RobotModel getRobotModel() {
         return robotModel;
-    }
-
-    public ArrayList<TargetModel> getTargets() {
-        return targets;
     }
 
     public void addKeyListener(JPanel panel) {
@@ -53,7 +49,7 @@ public class Controller {
 
     protected ArrayList<Double> calculateDistance() {
         ArrayList<Double> distances = new ArrayList<>();
-        for (TargetModel target : targets) {
+        for (TargetModel target : Game.getInstance().getTargets()) {
             double diffX = target.getXCoordinate() - robotModel.getXCoordinate();
             double diffY = target.getYCoordinate() - robotModel.getYCoordinate();
             distances.add(Math.sqrt(diffX * diffX + diffY * diffY));
@@ -61,8 +57,8 @@ public class Controller {
         return distances;
     }
 
-    public void deleteTarget(int index) {
-        targets.remove(index);
+    protected void generateNewSpikeCoordinates(){
+        spikeModel.generateCoordinates();
     }
 
     protected double distanceToSpike() {
@@ -77,7 +73,7 @@ public class Controller {
      * @param index индекс таргета в массиве таргетов
      */
     protected void generateNewTargetCoordinates(int index) {
-        targets.get(index).generateNewCoordinates();
+        Game.getInstance().getTargets().get(index).generateNewCoordinates();
     }
 
     /**
@@ -86,7 +82,7 @@ public class Controller {
      * @param index индекс таргета в массиве таргетов
      */
     protected void generateNewTargetTexture(int index) {
-        targets.get(index).generateNewTexturePath();
+        Game.getInstance().getTargets().get(index).generateNewTexturePath();
     }
 }
 
