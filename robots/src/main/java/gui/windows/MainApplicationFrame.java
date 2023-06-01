@@ -4,11 +4,13 @@ import gui.MVC.*;
 import gui.MVC.Controller;
 import gui.MVC.RobotModel;
 import log.Logger;
+import multiplayer.Client;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Locale;
+import java.util.Scanner;
 
 
 import static gui.windows.ConstantsGUI.*;
@@ -17,7 +19,7 @@ import static gui.windows.ConstantsGUI.*;
 public class MainApplicationFrame extends JFrame {
     private final JDesktopPane desktopPane = new JDesktopPane();
 
-    public MainApplicationFrame() {
+    public MainApplicationFrame() throws InterruptedException {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(SCREEN_OFFSET, SCREEN_OFFSET,
                 screenSize.width - SCREEN_OFFSET * 2,
@@ -33,7 +35,19 @@ public class MainApplicationFrame extends JFrame {
 
         RobotModel robotModel = new RobotModel();
         SpikeModel spikeModel = new SpikeModel();
-        Controller controller = new Controller(robotModel, spikeModel);
+
+        System.out.println("Введи имя");
+        Scanner scanner = new Scanner(System.in);
+        String name = scanner.nextLine();
+        Client multiplayerClient = new Client(robotModel, name);
+        Thread clientThread = new Thread(multiplayerClient::run);
+        clientThread.start();
+
+        Thread.sleep(1000); // ждём пока подключится второй, чтобы говно не выскакивало
+        RobotModel enemyRobotModel = multiplayerClient.getReceivedRobot();
+
+
+        Controller controller = new Controller(robotModel, enemyRobotModel, spikeModel, multiplayerClient);
         GameWindow gameWindow = new GameWindow(controller);
         gameWindow.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
         gameWindow.setLocation(screenSize.width / 4, screenSize.height / 10);

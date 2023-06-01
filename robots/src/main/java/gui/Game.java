@@ -11,7 +11,7 @@ public class Game {
     private static Game instance;
     private int numberOfTargets;
     private int scoreOfGame = 0;
-    private final ArrayList<TargetModel> targets = new ArrayList<>();
+
     private Game() {
         resetTargets();
     }
@@ -27,7 +27,6 @@ public class Game {
     public int getNumberOfTargets() {
         return numberOfTargets;
     }
-    public ArrayList<TargetModel> getTargets() {return targets;}
 
     public static Game getInstance() {
         if (instance == null) {

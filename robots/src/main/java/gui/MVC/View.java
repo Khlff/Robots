@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
@@ -47,8 +48,8 @@ public class View extends JPanel {
     protected void onModelUpdateEvent() {
         ArrayList<Double> distances = controller.calculateDistance();
         for (Double distance : distances) {
-            if (distance <= (double) controller.getRobotModel().getSize() / 2) {
-                controller.getRobotModel().setSize(controller.getRobotModel().getSize() + 10);
+            if (distance <= (double) controller.getLocalRobotModel().getSize() / 2) {
+                controller.getLocalRobotModel().setSize(controller.getLocalRobotModel().getSize() + 10);
                 controller.generateNewTargetCoordinates(distances.indexOf(distance));
                 controller.generateNewTargetTexture(distances.indexOf(distance));
                 controller.generateNewSpikeCoordinates();
@@ -76,7 +77,7 @@ public class View extends JPanel {
         BufferedImage texture = textureCache.get(texturePath);
         if (texture == null) {
             try {
-                texture = ImageIO.read(new File(texturePath));
+                texture = ImageIO.read(new File(Paths.get(texturePath).toString()));
                 textureCache.put(texturePath, texture);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -95,7 +96,7 @@ public class View extends JPanel {
         int modelCenterX = (int) model.getXCoordinate();
         int modelCenterY = (int) model.getYCoordinate();
 
-        BufferedImage texture = getTexture(texturePath);
+        BufferedImage texture = getTexture(Paths.get(texturePath).toString());
         if (texture != null) {
             g.drawImage(
                     texture,
@@ -117,9 +118,10 @@ public class View extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
-        draw(g2d, controller.getRobotModel(), controller.getRobotModel().texturePath);
+        draw(g2d, controller.getEnemyRobotModel(), controller.getEnemyRobotModel().texturePath);
+        draw(g2d, controller.getLocalRobotModel(), controller.getLocalRobotModel().texturePath);
         draw(g2d, controller.getSpikeModel(), controller.getSpikeModel().texturePath);
-        for (TargetModel target : Game.getInstance().getTargets()) {
+        for (TargetModel target : controller.getTargets()) {
             draw(g2d, target, target.texturePath);
         }
     }

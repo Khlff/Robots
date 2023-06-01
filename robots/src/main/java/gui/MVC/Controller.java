@@ -1,6 +1,7 @@
 package gui.MVC;
 
 import gui.Game;
+import multiplayer.Client;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -8,62 +9,73 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Controller {
-    private final RobotModel robotModel;
+    private final RobotModel localRobotModel;
+    private final RobotModel enemyRobotModel;
     private final SpikeModel spikeModel;
-//    private final ArrayList<TargetModel> targets = new ArrayList<>();
+    private final ArrayList<TargetModel> targets = new ArrayList<>();
 
 
     protected static Timer initTimer() {
         return new Timer("events generator", true);
     }
 
-    public Controller(RobotModel robotModel, SpikeModel spikeModel) {
-        this.robotModel = robotModel;
+    public Controller(RobotModel localRobotModel, RobotModel enemyRobotModel, SpikeModel spikeModel, Client multiplayerClient) {
+        this.localRobotModel = localRobotModel;
+        this.enemyRobotModel = enemyRobotModel;
         this.spikeModel = spikeModel;
         Timer movementTimer = initTimer();
         movementTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                robotModel.move();
+                localRobotModel.move();
             }
         }, 0, 20);
 
         for (int i = 0; i < Game.getInstance().getNumberOfTargets(); i++) {
             TargetModel target = new TargetModel();
-            Game.getInstance().getTargets().add(target);
+            targets.add(target);
         }
     }
 
-    public RobotModel getRobotModel() {
-        return robotModel;
+    public RobotModel getLocalRobotModel() {
+        return localRobotModel;
     }
 
-    public void addKeyListener(JPanel panel) {
-        KeyEventListener keyEventListener = new KeyEventListener(robotModel);
-        panel.addKeyListener(keyEventListener);
+    public RobotModel getEnemyRobotModel() {
+        return enemyRobotModel;
     }
+
+    public ArrayList<TargetModel> getTargets() {
+        return targets;
+    }
+
 
     public SpikeModel getSpikeModel() {
         return spikeModel;
     }
 
+    public void addKeyListener(JPanel panel) {
+        KeyEventListener keyEventListener = new KeyEventListener(localRobotModel);
+        panel.addKeyListener(keyEventListener);
+    }
+
     protected ArrayList<Double> calculateDistance() {
         ArrayList<Double> distances = new ArrayList<>();
-        for (TargetModel target : Game.getInstance().getTargets()) {
-            double diffX = target.getXCoordinate() - robotModel.getXCoordinate();
-            double diffY = target.getYCoordinate() - robotModel.getYCoordinate();
+        for (TargetModel target : targets) {
+            double diffX = target.getXCoordinate() - localRobotModel.getXCoordinate();
+            double diffY = target.getYCoordinate() - localRobotModel.getYCoordinate();
             distances.add(Math.sqrt(diffX * diffX + diffY * diffY));
         }
         return distances;
     }
 
-    protected void generateNewSpikeCoordinates(){
+    protected void generateNewSpikeCoordinates() {
         spikeModel.generateCoordinates();
     }
 
     protected double distanceToSpike() {
-        double diffX = spikeModel.getXCoordinate() - robotModel.getXCoordinate();
-        double diffY = spikeModel.getYCoordinate() - robotModel.getYCoordinate();
+        double diffX = spikeModel.getXCoordinate() - localRobotModel.getXCoordinate();
+        double diffY = spikeModel.getYCoordinate() - localRobotModel.getYCoordinate();
         return (Math.sqrt(diffX * diffX + diffY * diffY));
     }
 
@@ -73,7 +85,7 @@ public class Controller {
      * @param index индекс таргета в массиве таргетов
      */
     protected void generateNewTargetCoordinates(int index) {
-        Game.getInstance().getTargets().get(index).generateNewCoordinates();
+        targets.get(index).generateNewCoordinates();
     }
 
     /**
@@ -82,7 +94,7 @@ public class Controller {
      * @param index индекс таргета в массиве таргетов
      */
     protected void generateNewTargetTexture(int index) {
-        Game.getInstance().getTargets().get(index).generateNewTexturePath();
+        targets.get(index).generateNewTexturePath();
     }
 }
 

@@ -1,5 +1,6 @@
 package gui.MVC;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import static gui.MVC.ModelsConstants.*;
@@ -7,7 +8,7 @@ import static gui.windows.ConstantsGUI.GAME_WINDOW_HEIGHT;
 import static gui.windows.ConstantsGUI.GAME_WINDOW_WIDTH;
 import static java.lang.Math.sqrt;
 
-public class RobotModel extends GameEntity {
+public class RobotModel extends GameEntity implements Serializable {
     private final ArrayList<Observer> observers;
     private final int robotSpeed = DEFAULT_ROBOT_SPEED;
     public final String texturePath = "./robots/src/main/resources/objectTextures/black-hole.png";

@@ -14,11 +14,11 @@ public class CoordinatesObserver extends JPanel implements Observer {
 
     public CoordinatesObserver(Controller controller) {
         this.controller = controller;
-        this.controller.getRobotModel().addObserver(this);
+        this.controller.getLocalRobotModel().addObserver(this);
         add(yLabel);
         add(xLabel);
-        xLabel.setText(String.valueOf(round(controller.getRobotModel().getXCoordinate())));
-        yLabel.setText(String.valueOf(round(controller.getRobotModel().getXCoordinate())));
+        xLabel.setText(String.valueOf(round(controller.getLocalRobotModel().getXCoordinate())));
+        yLabel.setText(String.valueOf(round(controller.getLocalRobotModel().getXCoordinate())));
     }
 
     private int round(double value) {
@@ -27,7 +27,7 @@ public class CoordinatesObserver extends JPanel implements Observer {
 
     @Override
     public void update() {
-        xLabel.setText(String.valueOf(round((controller.getRobotModel().getXCoordinate()))));
-        yLabel.setText(String.valueOf(round((controller.getRobotModel().getYCoordinate()))));
+        xLabel.setText(String.valueOf(round((controller.getLocalRobotModel().getXCoordinate()))));
+        yLabel.setText(String.valueOf(round((controller.getLocalRobotModel().getYCoordinate()))));
     }
 }
