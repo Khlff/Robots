@@ -3,13 +3,13 @@ package gui;
 
 public class Game {
     private static Game instance;
-    private int numberOfTargets;
+    private final int numberOfTargets;
     private final int numberOfSpikes;
     private int scoreOfGame = 0;
 
     private Game() {
-        resetTargets();
-        this.numberOfSpikes = (int) (Math.random() * 5) + 1;
+        this.numberOfTargets = (int) (Math.random() * 6) + 3;
+        this.numberOfSpikes = (int) (Math.random() * 3) + 1;
     }
 
     public int getScoreOfGame() {
@@ -35,7 +35,4 @@ public class Game {
         return instance;
     }
 
-    public void resetTargets() {
-        this.numberOfTargets = (int) (Math.random() * 10) + 1;
-    }
 }

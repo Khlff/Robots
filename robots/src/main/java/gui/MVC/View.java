@@ -14,7 +14,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static gui.MVC.Controller.initTimer;
-import static gui.MVC.ModelsConstants.DEFAULT_SPIKE_SIZE;
 
 public class View extends JPanel {
     Controller controller;
@@ -45,20 +44,22 @@ public class View extends JPanel {
     }
 
     protected void onModelUpdateEvent() {
-        ArrayList<Double> distances = controller.calculateDistance();
+        ArrayList<Double> distances = controller.calculateDistanceToEntities();
         for (Double distance : distances) {
             if (distance <= (double) controller.getRobotModel().getSize() / 2) {
-                controller.getRobotModel().setSize(controller.getRobotModel().getSize() + 10);
-                controller.generateNewTargetCoordinates(distances.indexOf(distance));
-                controller.generateNewTargetTexture(distances.indexOf(distance));
-                Game.getInstance().addScoreOfGame();
-                score.setText(String.valueOf(Game.getInstance().getScoreOfGame()));
+                GameEntity entity = controller.getGameEntityByIndex(distances.indexOf(distance));
+                if (entity.getClass().equals(TargetModel.class)) {
+                    controller.getRobotModel().setSize(controller.getRobotModel().getSize() + 10);
+                    controller.generateNewTargetCoordinates(distances.indexOf(distance));
+                    controller.generateNewTargetTexture(distances.indexOf(distance));
+                    Game.getInstance().addScoreOfGame();
+                    score.setText(String.valueOf(Game.getInstance().getScoreOfGame()));
+                } else {
+                    if (entity.getSize() * 3 / 4 < controller.getRobotModel().getSize()) {
+                        System.exit(0);
+                    }
+                }
             }
-
-            if (controller.distanceToSpike() <= (double) DEFAULT_SPIKE_SIZE / 2) {
-                System.exit(0);
-            }
-
             if (distance < 0.5) {
                 return;
             }
@@ -116,10 +117,9 @@ public class View extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
-        draw(g2d, controller.getRobotModel(), controller.getRobotModel().texturePath);
-        draw(g2d, controller.getSpikeModel(), controller.getSpikeModel().texturePath);
-        for (TargetModel target : controller.getTargets()) {
-            draw(g2d, target, target.texturePath);
+        draw(g2d, controller.getRobotModel(), controller.getRobotModel().getTexturePath());
+        for (GameEntity entity : controller.getGameEntities()) {
+            draw(g2d, entity, entity.getTexturePath());
         }
     }
 }

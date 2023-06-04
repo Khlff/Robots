@@ -10,7 +10,6 @@ import static java.lang.Math.sqrt;
 public class RobotModel extends GameEntity {
     private final ArrayList<Observer> observers;
     private final int robotSpeed = DEFAULT_ROBOT_SPEED;
-    public final String texturePath = ".\\robots\\src\\main\\resources\\objectTextures\\black-hole.png";
 
     private enum Direction {
         UP_LEFT, UP, UP_RIGHT, LEFT, RIGHT, DOWN_LEFT, DOWN, DOWN_RIGHT
@@ -23,6 +22,7 @@ public class RobotModel extends GameEntity {
         setXCoordinate(DEFAULT_X_ROBOT_POSITION);
         setYCoordinate(DEFAULT_Y_ROBOT_POSITION);
         setSize(DEFAULT_ROBOT_SIZE);
+        setTexturePath(".\\robots\\src\\main\\resources\\objectTextures\\black-hole.png");
     }
 
     public double getRobotSpeed() {
@@ -149,13 +149,13 @@ public class RobotModel extends GameEntity {
                 }
             }
             case DOWN_LEFT -> {
-                if (getYCoordinate() + robotSpeed <= GAME_WINDOW_HEIGHT - sqrt(size) && getXCoordinate() - robotSpeed >= 0) {
+                if (getYCoordinate() + robotSpeed <= GAME_WINDOW_HEIGHT - sqrt(getSize()) && getXCoordinate() - robotSpeed >= 0) {
                     setXCoordinate(getXCoordinate() - robotSpeed / Math.sqrt(2));
                     setYCoordinate(getYCoordinate() + robotSpeed / Math.sqrt(2));
                 }
             }
             case DOWN_RIGHT -> {
-                if (getYCoordinate() + robotSpeed <= GAME_WINDOW_HEIGHT - sqrt(size) && getXCoordinate() + robotSpeed <= GAME_WINDOW_WIDTH) {
+                if (getYCoordinate() + robotSpeed <= GAME_WINDOW_HEIGHT - sqrt(getSize()) && getXCoordinate() + robotSpeed <= GAME_WINDOW_WIDTH) {
                     setXCoordinate(getXCoordinate() + robotSpeed / Math.sqrt(2));
                     setYCoordinate(getYCoordinate() + robotSpeed / Math.sqrt(2));
                 }
