@@ -46,6 +46,12 @@ public class Controller {
 
     }
 
+    public void reset() {
+        for (GameEntity entity : gameEntities) {
+            entity.generateNewCoordinates();
+        }
+    }
+
     public RobotModel getRobotModel() {
         return robotModel;
     }

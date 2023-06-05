@@ -64,14 +64,15 @@ public class View extends JPanel {
                 } else {
                     if (entity instanceof GameBonus bonus) {
                         bonus.changeProperties();
-                        score.setText(String.valueOf(Game.getInstance().getGameScore()));
-                        controller.appendNewBonus();
+                        if (Game.getInstance().isNeedReset()){
+                            controller.reset();
+                        }
                     } else {
                         RobotBonus bonus = (RobotBonus) entity;
                         bonus.changeProperties(controller.getRobotModel());
-                        score.setText(String.valueOf(Game.getInstance().getGameScore()));
-                        controller.appendNewBonus();
                     }
+                    score.setText(String.valueOf(Game.getInstance().getGameScore()));
+                    controller.appendNewBonus();
                 }
             }
             if (distance < 0.5) {

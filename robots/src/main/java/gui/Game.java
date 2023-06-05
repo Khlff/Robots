@@ -9,12 +9,14 @@ public class Game {
     private final int targetsNumber;
     private final int spikesNumber;
     private int gameScore = 0;
+    private boolean needReset = false;
     Random random = new Random();
     private final ArrayList<String> bonuses = new ArrayList<String>() {{
         add("HALF-SIZE");
         add("SCORE");
         add("UPGRADE");
         add("TELEPORT");
+        add("RESET");
     }};
 
     private Game() {
@@ -51,4 +53,11 @@ public class Game {
         return bonuses.get(randomNumber);
     }
 
+    public void setNeedReset(boolean needReset) {
+        this.needReset = needReset;
+    }
+
+    public boolean isNeedReset() {
+        return needReset;
+    }
 }

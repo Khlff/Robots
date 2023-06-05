@@ -1,10 +1,7 @@
 package gui;
 
 import gui.MVC.GameEntity;
-import gui.MVC.bonuses.DownSizeBonus;
-import gui.MVC.bonuses.ScoreBonus;
-import gui.MVC.bonuses.TeleportBonus;
-import gui.MVC.bonuses.UpSizeBonus;
+import gui.MVC.bonuses.*;
 
 public class BonusesFabric {
     public GameEntity createBonus(String type) {
@@ -15,6 +12,7 @@ public class BonusesFabric {
             case "SCORE" -> bonus = new ScoreBonus();
             case "UPGRADE" -> bonus = new UpSizeBonus();
             case "TELEPORT" -> bonus = new TeleportBonus();
+            case "RESET" -> bonus = new ResetBonus();
         }
         return bonus;
     }
