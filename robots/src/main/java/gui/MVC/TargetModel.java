@@ -15,15 +15,6 @@ public class TargetModel extends GameEntity {
         generateNewTexturePath();
     }
 
-
-    /**
-     * Генерирует таргету новые координаты
-     */
-    public void generateNewCoordinates() {
-        setXCoordinate((int) (Math.random() * GAME_WINDOW_WIDTH));
-        setYCoordinate((int) (Math.random() * GAME_WINDOW_HEIGHT));
-    }
-
     /**
      * Генерирует таргету путь к новой текстуре
      */

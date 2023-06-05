@@ -33,8 +33,7 @@ public class MainApplicationFrame extends JFrame {
         LogWindow logWindow = createLogWindow();
 
         RobotModel robotModel = new RobotModel();
-        SpikeModel spikeModel = new SpikeModel();
-        Controller controller = new Controller(robotModel, spikeModel);
+        Controller controller = new Controller(robotModel);
         GameWindow gameWindow = new GameWindow(controller);
         gameWindow.setResizable(false);
         gameWindow.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);

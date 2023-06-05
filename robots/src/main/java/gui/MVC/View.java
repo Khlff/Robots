@@ -1,6 +1,9 @@
 package gui.MVC;
 
+import gui.BonusesFabric;
 import gui.Game;
+import gui.MVC.bonuses.GameBonus;
+import gui.MVC.bonuses.RobotBonus;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -22,7 +25,7 @@ public class View extends JPanel {
 
     public View(Controller controller) {
         add(score);
-        score.setText(String.valueOf(Game.getInstance().getScoreOfGame()));
+        score.setText(String.valueOf(Game.getInstance().getGameScore()));
         this.controller = controller;
         Timer viewTimer = initTimer();
         viewTimer.schedule(new TimerTask() {
@@ -50,13 +53,24 @@ public class View extends JPanel {
                 GameEntity entity = controller.getGameEntityByIndex(distances.indexOf(distance));
                 if (entity.getClass().equals(TargetModel.class)) {
                     controller.getRobotModel().setSize(controller.getRobotModel().getSize() + 10);
-                    controller.generateNewTargetCoordinates(distances.indexOf(distance));
+                    entity.generateNewCoordinates();
                     controller.generateNewTargetTexture(distances.indexOf(distance));
-                    Game.getInstance().addScoreOfGame();
-                    score.setText(String.valueOf(Game.getInstance().getScoreOfGame()));
-                } else {
+                    Game.getInstance().setGameScore(1);
+                    score.setText(String.valueOf(Game.getInstance().getGameScore()));
+                } else if (entity.getClass().equals(SpikeModel.class)) {
                     if (entity.getSize() * 3 / 4 < controller.getRobotModel().getSize()) {
                         System.exit(0);
+                    }
+                } else {
+                    if (entity instanceof GameBonus bonus) {
+                        bonus.changeProperties();
+                        score.setText(String.valueOf(Game.getInstance().getGameScore()));
+                        controller.appendNewBonus();
+                    } else {
+                        RobotBonus bonus = (RobotBonus) entity;
+                        bonus.changeProperties(controller.getRobotModel());
+                        score.setText(String.valueOf(Game.getInstance().getGameScore()));
+                        controller.appendNewBonus();
                     }
                 }
             }
@@ -97,13 +111,7 @@ public class View extends JPanel {
 
         BufferedImage texture = getTexture(texturePath);
         if (texture != null) {
-            g.drawImage(
-                    texture,
-                    modelCenterX - model.getSize() / 2,
-                    modelCenterY - model.getSize() / 2,
-                    model.getSize(), model.getSize(),
-                    null
-            );
+            g.drawImage(texture, modelCenterX - model.getSize() / 2, modelCenterY - model.getSize() / 2, model.getSize(), model.getSize(), null);
         }
 
     }

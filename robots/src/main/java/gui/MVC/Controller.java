@@ -1,5 +1,6 @@
 package gui.MVC;
 
+import gui.BonusesFabric;
 import gui.Game;
 
 import javax.swing.*;
@@ -9,7 +10,7 @@ import java.util.TimerTask;
 
 public class Controller {
     private final RobotModel robotModel;
-    private final SpikeModel spikeModel;
+    private final BonusesFabric fabric = new BonusesFabric();
     private final ArrayList<GameEntity> gameEntities = new ArrayList<>();
 
 
@@ -17,9 +18,8 @@ public class Controller {
         return new Timer("events generator", true);
     }
 
-    public Controller(RobotModel robotModel, SpikeModel spikeModel) {
+    public Controller(RobotModel robotModel) {
         this.robotModel = robotModel;
-        this.spikeModel = spikeModel;
         Timer movementTimer = initTimer();
         movementTimer.schedule(new TimerTask() {
             @Override
@@ -27,14 +27,23 @@ public class Controller {
                 robotModel.move();
             }
         }, 0, 20);
-        for (int i = 0; i < Game.getInstance().getNumberOfSpikes(); i++) {
+        for (int i = 0; i < Game.getInstance().getSpikesNumber(); i++) {
             SpikeModel spike = new SpikeModel();
             gameEntities.add(spike);
         }
-        for (int i = 0; i < Game.getInstance().getNumberOfTargets(); i++) {
+        for (int i = 0; i < Game.getInstance().getTargetsNumber(); i++) {
             TargetModel target = new TargetModel();
             gameEntities.add(target);
         }
+        GameEntity bonus = fabric.createBonus(Game.getInstance().getRandomBonus());
+        gameEntities.add(bonus);
+    }
+
+    public void appendNewBonus() {
+        GameEntity bonus = fabric.createBonus(Game.getInstance().getRandomBonus());
+        gameEntities.remove(gameEntities.size() - 1);
+        gameEntities.add(bonus);
+
     }
 
     public RobotModel getRobotModel() {
@@ -45,16 +54,13 @@ public class Controller {
         return gameEntities;
     }
 
-    public GameEntity getGameEntityByIndex(int index){
+    public GameEntity getGameEntityByIndex(int index) {
         return gameEntities.get(index);
     }
+
     public void addKeyListener(JPanel panel) {
         KeyEventListener keyEventListener = new KeyEventListener(robotModel);
         panel.addKeyListener(keyEventListener);
-    }
-
-    public SpikeModel getSpikeModel() {
-        return spikeModel;
     }
 
     protected ArrayList<Double> calculateDistanceToEntities() {

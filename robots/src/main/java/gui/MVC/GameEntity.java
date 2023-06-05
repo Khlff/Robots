@@ -1,6 +1,9 @@
 package gui.MVC;
 
-abstract class GameEntity extends BaseEntity {
+import static gui.windows.ConstantsGUI.GAME_WINDOW_HEIGHT;
+import static gui.windows.ConstantsGUI.GAME_WINDOW_WIDTH;
+
+public abstract class GameEntity extends BaseEntity {
     private int size;
     private String texturePath;
 
@@ -24,6 +27,7 @@ abstract class GameEntity extends BaseEntity {
     }
 
     public void generateNewCoordinates() {
-
+        setXCoordinate((int) (Math.random() * GAME_WINDOW_WIDTH));
+        setYCoordinate((int) (Math.random() * GAME_WINDOW_HEIGHT));
     }
 }
