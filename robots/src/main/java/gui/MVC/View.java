@@ -4,6 +4,8 @@ import gui.BonusesFabric;
 import gui.Game;
 import gui.MVC.bonuses.GameBonus;
 import gui.MVC.bonuses.RobotBonus;
+import gui.windows.DeathWindow;
+import gui.windows.MainApplicationFrame;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,6 +22,7 @@ import static gui.MVC.Controller.initTimer;
 
 public class View extends JPanel {
     Controller controller;
+    private final File storeFile = new File(System.getProperty("user.home").concat("/.robots"));
     private final String playerName;
     private final HashMap<String, BufferedImage> textureCache = new HashMap<>();
     JLabel score = new JLabel();
@@ -64,7 +67,14 @@ public class View extends JPanel {
                 } else if (entity.getClass().equals(SpikeModel.class)) {
                     if (entity.getSize() * 3 / 4 < controller.getRobotModel().getSize()) {
                         System.out.println(playerName + " набрал " + score.getText() + " очков.");
-                        System.exit(0);
+                        ScoreRecord scoreRecord = new ScoreRecord(storeFile);
+                        int record = scoreRecord.getRecord();
+                        if (record < Game.getInstance().getScoreOfGame()){
+                            scoreRecord.save(Game.getInstance().getScoreOfGame());
+                            record = Game.getInstance().getScoreOfGame();
+                        }
+                        DeathWindow deathWindow = new DeathWindow(Game.getInstance().getScoreOfGame(), record);
+                        break;
                     }
                 } else {
                     if (entity instanceof GameBonus bonus) {
@@ -85,6 +95,7 @@ public class View extends JPanel {
             }
         }
     }
+
 
     /**
      * Функция возвращает текстуру из HashMap, если она там есть, если её там нет - хэширует её.
