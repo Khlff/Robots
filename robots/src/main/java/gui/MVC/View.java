@@ -18,13 +18,17 @@ import static gui.MVC.ModelsConstants.DEFAULT_SPIKE_SIZE;
 
 public class View extends JPanel {
     Controller controller;
+    private final String playerName;
     private final HashMap<String, BufferedImage> textureCache = new HashMap<>();
     JLabel score = new JLabel();
 
-    public View(Controller controller) {
+    public View(Controller controller, String playerName) {
+        this.controller = controller;
+        this.playerName = playerName;
+
         add(score);
         score.setText(String.valueOf(Game.getInstance().getScoreOfGame()));
-        this.controller = controller;
+
         Timer viewTimer = initTimer();
         viewTimer.schedule(new TimerTask() {
             @Override
@@ -56,6 +60,7 @@ public class View extends JPanel {
             }
 
             if (controller.distanceToSpike() <= (double) DEFAULT_SPIKE_SIZE / 2) {
+                System.out.println(playerName + " набрал " + score.getText() + " очков.");
                 System.exit(0);
             }
 

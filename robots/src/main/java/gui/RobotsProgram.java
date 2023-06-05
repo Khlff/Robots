@@ -1,6 +1,7 @@
 package gui;
 
 import gui.windows.MainApplicationFrame;
+import gui.windows.StartMenu;
 
 import java.awt.Frame;
 
@@ -18,12 +19,17 @@ public class RobotsProgram
       } catch (Exception e) {
         e.printStackTrace();
       }
-      SwingUtilities.invokeLater(() -> {
-        MainApplicationFrame frame = new MainApplicationFrame();
+      StartMenu startMenu = new StartMenu();
+      startMenu.pack();
+      startMenu.setResizable(false);
+      startMenu.setVisible(true);
 
-        frame.pack();
-        frame.setResizable(false);
-        frame.setVisible(true);
-        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
-      });
+//      SwingUtilities.invokeLater(() -> {
+//        MainApplicationFrame frame = new MainApplicationFrame();
+//
+//        frame.pack();
+//        frame.setResizable(false);
+//        frame.setVisible(true);
+//        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+//      });
     }}

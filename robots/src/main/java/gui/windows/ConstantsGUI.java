@@ -1,6 +1,8 @@
 package gui.windows;
 
 public class ConstantsGUI {
+    public static final int START_MENU_WIDTH = 600;
+    public static final int START_MENU_HEIGHT = 600;
     public static final int GAME_WINDOW_WIDTH = 1200;
     public static final int GAME_WINDOW_HEIGHT = 720;
     public static final int SCREEN_OFFSET = 50;

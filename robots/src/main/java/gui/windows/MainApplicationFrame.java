@@ -18,7 +18,7 @@ import static gui.windows.ConstantsGUI.*;
 public class MainApplicationFrame extends JFrame {
     private final JDesktopPane desktopPane = new JDesktopPane();
 
-    public MainApplicationFrame() {
+    public MainApplicationFrame(String playerName) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(SCREEN_OFFSET, SCREEN_OFFSET,
                 screenSize.width - SCREEN_OFFSET * 2,
@@ -35,7 +35,7 @@ public class MainApplicationFrame extends JFrame {
         RobotModel robotModel = new RobotModel();
         SpikeModel spikeModel = new SpikeModel();
         Controller controller = new Controller(robotModel, spikeModel);
-        GameWindow gameWindow = new GameWindow(controller);
+        GameWindow gameWindow = new GameWindow(controller, playerName);
         gameWindow.setResizable(false);
         gameWindow.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
         gameWindow.setLocation(screenSize.width / 4, screenSize.height / 10);
