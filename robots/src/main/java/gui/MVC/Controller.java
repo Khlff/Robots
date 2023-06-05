@@ -1,5 +1,6 @@
 package gui.MVC;
 
+import gui.BonusesFabric;
 import gui.Game;
 
 import javax.swing.*;
@@ -9,17 +10,16 @@ import java.util.TimerTask;
 
 public class Controller {
     private final RobotModel robotModel;
-    private final SpikeModel spikeModel;
-    private final ArrayList<TargetModel> targets = new ArrayList<>();
+    private final BonusesFabric fabric = new BonusesFabric();
+    private final ArrayList<GameEntity> gameEntities = new ArrayList<>();
 
 
     protected static Timer initTimer() {
         return new Timer("events generator", true);
     }
 
-    public Controller(RobotModel robotModel, SpikeModel spikeModel) {
+    public Controller(RobotModel robotModel) {
         this.robotModel = robotModel;
-        this.spikeModel = spikeModel;
         Timer movementTimer = initTimer();
         movementTimer.schedule(new TimerTask() {
             @Override
@@ -27,10 +27,28 @@ public class Controller {
                 robotModel.move();
             }
         }, 0, 20);
-
-        for (int i = 0; i < Game.getInstance().getNumberOfTargets(); i++) {
+        for (int i = 0; i < Game.getInstance().getSpikesNumber(); i++) {
+            SpikeModel spike = new SpikeModel();
+            gameEntities.add(spike);
+        }
+        for (int i = 0; i < Game.getInstance().getTargetsNumber(); i++) {
             TargetModel target = new TargetModel();
-            targets.add(target);
+            gameEntities.add(target);
+        }
+        GameEntity bonus = fabric.createBonus(Game.getInstance().getRandomBonus());
+        gameEntities.add(bonus);
+    }
+
+    public void appendNewBonus() {
+        GameEntity bonus = fabric.createBonus(Game.getInstance().getRandomBonus());
+        gameEntities.remove(gameEntities.size() - 1);
+        gameEntities.add(bonus);
+
+    }
+
+    public void reset() {
+        for (GameEntity entity : gameEntities) {
+            entity.generateNewCoordinates();
         }
     }
 
@@ -38,8 +56,12 @@ public class Controller {
         return robotModel;
     }
 
-    public ArrayList<TargetModel> getTargets() {
-        return targets;
+    public ArrayList<GameEntity> getGameEntities() {
+        return gameEntities;
+    }
+
+    public GameEntity getGameEntityByIndex(int index) {
+        return gameEntities.get(index);
     }
 
     public void addKeyListener(JPanel panel) {
@@ -47,28 +69,14 @@ public class Controller {
         panel.addKeyListener(keyEventListener);
     }
 
-    public SpikeModel getSpikeModel() {
-        return spikeModel;
-    }
-
-    protected ArrayList<Double> calculateDistance() {
+    protected ArrayList<Double> calculateDistanceToEntities() {
         ArrayList<Double> distances = new ArrayList<>();
-        for (TargetModel target : targets) {
-            double diffX = target.getXCoordinate() - robotModel.getXCoordinate();
-            double diffY = target.getYCoordinate() - robotModel.getYCoordinate();
+        for (GameEntity entity : gameEntities) {
+            double diffX = entity.getXCoordinate() - robotModel.getXCoordinate();
+            double diffY = entity.getYCoordinate() - robotModel.getYCoordinate();
             distances.add(Math.sqrt(diffX * diffX + diffY * diffY));
         }
         return distances;
-    }
-
-    public void deleteTarget(int index) {
-        targets.remove(index);
-    }
-
-    protected double distanceToSpike() {
-        double diffX = spikeModel.getXCoordinate() - robotModel.getXCoordinate();
-        double diffY = spikeModel.getYCoordinate() - robotModel.getYCoordinate();
-        return (Math.sqrt(diffX * diffX + diffY * diffY));
     }
 
     /**
@@ -77,7 +85,7 @@ public class Controller {
      * @param index индекс таргета в массиве таргетов
      */
     protected void generateNewTargetCoordinates(int index) {
-        targets.get(index).generateNewCoordinates();
+        gameEntities.get(index).generateNewCoordinates();
     }
 
     /**
@@ -86,7 +94,7 @@ public class Controller {
      * @param index индекс таргета в массиве таргетов
      */
     protected void generateNewTargetTexture(int index) {
-        targets.get(index).generateNewTexturePath();
+        gameEntities.get(index).generateNewTexturePath();
     }
 }
 

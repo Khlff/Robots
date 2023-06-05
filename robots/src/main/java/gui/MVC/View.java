@@ -1,6 +1,9 @@
 package gui.MVC;
 
+import gui.BonusesFabric;
 import gui.Game;
+import gui.MVC.bonuses.GameBonus;
+import gui.MVC.bonuses.RobotBonus;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -14,7 +17,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static gui.MVC.Controller.initTimer;
-import static gui.MVC.ModelsConstants.DEFAULT_SPIKE_SIZE;
 
 public class View extends JPanel {
     Controller controller;
@@ -28,7 +30,7 @@ public class View extends JPanel {
 
         add(score);
         score.setText(String.valueOf(Game.getInstance().getScoreOfGame()));
-
+        this.controller = controller;
         Timer viewTimer = initTimer();
         viewTimer.schedule(new TimerTask() {
             @Override
@@ -49,20 +51,34 @@ public class View extends JPanel {
     }
 
     protected void onModelUpdateEvent() {
-        ArrayList<Double> distances = controller.calculateDistance();
+        ArrayList<Double> distances = controller.calculateDistanceToEntities();
         for (Double distance : distances) {
             if (distance <= (double) controller.getRobotModel().getSize() / 2) {
-                controller.getRobotModel().setSize(controller.getRobotModel().getSize() + 10);
-                controller.generateNewTargetCoordinates(distances.indexOf(distance));
-                controller.generateNewTargetTexture(distances.indexOf(distance));
-                Game.getInstance().addScoreOfGame();
-                score.setText(String.valueOf(Game.getInstance().getScoreOfGame()));
-            }
-
-            if (controller.distanceToSpike() <= (double) DEFAULT_SPIKE_SIZE / 2) {
-                System.out.println(playerName + " набрал " + score.getText() + " очков.");
-                System.exit(0);
-            }
+                GameEntity entity = controller.getGameEntityByIndex(distances.indexOf(distance));
+                if (entity.getClass().equals(TargetModel.class)) {
+                    controller.getRobotModel().setSize(controller.getRobotModel().getSize() + 10);
+                    entity.generateNewCoordinates();
+                    controller.generateNewTargetTexture(distances.indexOf(distance));
+                    Game.getInstance().setGameScore(1);
+                    score.setText(String.valueOf(Game.getInstance().getGameScore()));
+                } else if (entity.getClass().equals(SpikeModel.class)) {
+                    if (entity.getSize() * 3 / 4 < controller.getRobotModel().getSize()) {
+                        System.out.println(playerName + " набрал " + score.getText() + " очков.");
+                        System.exit(0);
+                    }
+                } else {
+                    if (entity instanceof GameBonus bonus) {
+                        bonus.changeProperties();
+                        if (Game.getInstance().isNeedReset()){
+                            controller.reset();
+                        }
+                    } else {
+                        RobotBonus bonus = (RobotBonus) entity;
+                        bonus.changeProperties(controller.getRobotModel());
+                    }
+                    score.setText(String.valueOf(Game.getInstance().getGameScore()));
+                    controller.appendNewBonus();
+                }
 
             if (distance < 0.5) {
                 return;
@@ -121,10 +137,9 @@ public class View extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
-        draw(g2d, controller.getRobotModel(), controller.getRobotModel().texturePath);
-        draw(g2d, controller.getSpikeModel(), controller.getSpikeModel().texturePath);
-        for (TargetModel target : controller.getTargets()) {
-            draw(g2d, target, target.texturePath);
+        draw(g2d, controller.getRobotModel(), controller.getRobotModel().getTexturePath());
+        for (GameEntity entity : controller.getGameEntities()) {
+            draw(g2d, entity, entity.getTexturePath());
         }
     }
 }

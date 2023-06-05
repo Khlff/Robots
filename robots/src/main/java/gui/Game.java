@@ -1,31 +1,43 @@
 package gui;
 
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class Game {
     private static Game instance;
-    private int numberOfTargets;
-    private final int numberOfSpikes;
-    private int scoreOfGame = 0;
+    private final int targetsNumber;
+    private final int spikesNumber;
+    private int gameScore = 0;
+    private boolean needReset = false;
+    Random random = new Random();
+    private final ArrayList<String> bonuses = new ArrayList<String>() {{
+        add("HALF-SIZE");
+        add("SCORE");
+        add("UPGRADE");
+        add("TELEPORT");
+        add("RESET");
+    }};
 
     private Game() {
-        resetTargets();
-        this.numberOfSpikes = (int) (Math.random() * 5) + 1;
+        this.targetsNumber = random.nextInt(6) + 4;
+        this.spikesNumber = random.nextInt(3) + 1;
     }
 
-    public int getScoreOfGame() {
-        return scoreOfGame;
+    public int getGameScore() {
+        return gameScore;
     }
 
-    public void addScoreOfGame() {
-        scoreOfGame += 1;
+    public void setGameScore(int points) {
+        gameScore += points;
     }
 
-    public int getNumberOfTargets() {
-        return numberOfTargets;
+    public int getTargetsNumber() {
+        return targetsNumber;
     }
 
-    public int getNumberOfSpikes() {
-        return numberOfSpikes;
+    public int getSpikesNumber() {
+        return spikesNumber;
     }
 
     public static Game getInstance() {
@@ -35,7 +47,17 @@ public class Game {
         return instance;
     }
 
-    public void resetTargets() {
-        this.numberOfTargets = (int) (Math.random() * 10) + 1;
+
+    public String getRandomBonus() {
+        int randomNumber = random.nextInt(bonuses.size());
+        return bonuses.get(randomNumber);
+    }
+
+    public void setNeedReset(boolean needReset) {
+        this.needReset = needReset;
+    }
+
+    public boolean isNeedReset() {
+        return needReset;
     }
 }
