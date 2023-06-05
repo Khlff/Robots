@@ -1,9 +1,11 @@
 package gui.windows;
 
-import gui.MVC.*;
+
 import gui.MVC.Controller;
 import gui.MVC.RobotModel;
+import gui.MVC.SpikeModel;
 import log.Logger;
+import gui.Game;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +41,6 @@ public class MainApplicationFrame extends JFrame {
         gameWindow.setResizable(false);
         gameWindow.setSize(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT);
         gameWindow.setLocation(screenSize.width / 4, screenSize.height / 10);
-
         CoordinatesWindow coordinatesWindow = new CoordinatesWindow(controller);
         coordinatesWindow.setSize(COORDINATES_WIDTH, COORDINATES_HEIGHT);
         coordinatesWindow.setLocation(screenSize.width / 2, screenSize.height / 100);
@@ -66,6 +67,7 @@ public class MainApplicationFrame extends JFrame {
         desktopPane.add(frame);
         frame.setVisible(true);
     }
+
 
     private JMenuBar generateMenuBar() {
         JMenuBar menuBar = new JMenuBar();
@@ -160,4 +162,5 @@ public class MainApplicationFrame extends JFrame {
             System.out.println(e.getMessage());
         }
     }
+
 }

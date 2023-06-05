@@ -20,6 +20,7 @@ public class Game {
         scoreOfGame += 1;
     }
 
+
     public int getNumberOfTargets() {
         return numberOfTargets;
     }
