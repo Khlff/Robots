@@ -1,11 +1,9 @@
 package gui.MVC;
 
-import gui.BonusesFabric;
 import gui.Game;
 import gui.MVC.bonuses.GameBonus;
 import gui.MVC.bonuses.RobotBonus;
 import gui.windows.DeathWindow;
-import gui.windows.MainApplicationFrame;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -22,7 +20,7 @@ import static gui.MVC.Controller.initTimer;
 
 public class View extends JPanel {
     Controller controller;
-    private final File storeFile = new File(System.getProperty("user.home").concat("/.robots"));
+    private final File storeFile = new File(".\\robots\\src\\main\\resources\\score.txt");
     private final String playerName;
     private final HashMap<String, BufferedImage> textureCache = new HashMap<>();
     JLabel score = new JLabel();
@@ -32,7 +30,7 @@ public class View extends JPanel {
         this.playerName = playerName;
 
         add(score);
-        score.setText(String.valueOf(Game.getInstance().getScoreOfGame()));
+        score.setText(String.valueOf(Game.getInstance().getGameScore()));
         this.controller = controller;
         Timer viewTimer = initTimer();
         viewTimer.schedule(new TimerTask() {
@@ -69,17 +67,17 @@ public class View extends JPanel {
                         System.out.println(playerName + " набрал " + score.getText() + " очков.");
                         ScoreRecord scoreRecord = new ScoreRecord(storeFile);
                         int record = scoreRecord.getRecord();
-                        if (record < Game.getInstance().getScoreOfGame()){
-                            scoreRecord.save(Game.getInstance().getScoreOfGame());
-                            record = Game.getInstance().getScoreOfGame();
+                        if (record < Game.getInstance().getGameScore()) {
+                            scoreRecord.save(Game.getInstance().getGameScore());
+                            record = Game.getInstance().getGameScore();
                         }
-                        DeathWindow deathWindow = new DeathWindow(Game.getInstance().getScoreOfGame(), record);
+                        new DeathWindow(record);
                         break;
                     }
                 } else {
                     if (entity instanceof GameBonus bonus) {
                         bonus.changeProperties();
-                        if (Game.getInstance().isNeedReset()){
+                        if (Game.getInstance().isNeedReset()) {
                             controller.reset();
                         }
                     } else {
@@ -90,8 +88,9 @@ public class View extends JPanel {
                     controller.appendNewBonus();
                 }
 
-            if (distance < 0.5) {
-                return;
+                if (distance < 0.5) {
+                    return;
+                }
             }
         }
     }
